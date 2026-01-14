@@ -53,9 +53,7 @@ export default function TabTwoScreen() {
       </Collapsible>
       <Collapsible title="Images">
         <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
+          For static images, you can provide different resolutions for various screen densities.
         </ThemedText>
         <Image
           source={require('@/assets/images/react-logo.png')}
@@ -77,13 +75,11 @@ export default function TabTwoScreen() {
       </Collapsible>
       <Collapsible title="Animations">
         <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
+          This template uses the powerful{' '}
           <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
             react-native-reanimated
           </ThemedText>{' '}
-          library to create a waving hand animation.
+          library for animations.
         </ThemedText>
         {Platform.select({
           ios: (

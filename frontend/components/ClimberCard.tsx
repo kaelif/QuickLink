@@ -27,17 +27,14 @@ export function ClimberCard({ climber, distanceKm }: ClimberCardProps) {
           style={styles.image}
           contentFit="cover"
         />
-        <View style={[styles.gradient, styles.headerOverlay]} />
-        <View style={styles.header}>
-          <Text style={styles.name}>
-            {climber.firstName}, {climber.age}
-          </Text>
-          {distanceKm !== null && (
-            <Text style={styles.distance}>{formatDistance(distanceKm)}</Text>
-          )}
-        </View>
       </View>
       <View style={styles.footer}>
+        <Text style={styles.name}>
+          {climber.firstName}, {climber.age}
+        </Text>
+        {distanceKm !== null && (
+          <Text style={styles.distance}>{formatDistance(distanceKm)}</Text>
+        )}
         <View style={styles.chips}>
           {climber.climbingTypes.map((t) => (
             <View key={t} style={styles.chip}>
@@ -78,36 +75,21 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  gradient: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "transparent",
-  },
-  headerOverlay: {
-    top: "50%",
-    height: "50%",
-    backgroundColor: "rgba(0,0,0,0.45)",
-  },
-  header: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 16,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#fff",
-  },
-  distance: {
-    fontSize: 14,
-    color: "rgba(255,255,255,0.9)",
-    marginTop: 2,
-  },
   footer: {
     padding: 16,
     position: "relative",
     paddingBottom: 100,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#1a1a1a",
+    marginBottom: 2,
+  },
+  distance: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 10,
   },
   footerFade: {
     position: "absolute",

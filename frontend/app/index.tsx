@@ -1,5 +1,13 @@
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SwipeStack } from "../components/SwipeStack";
 import { DUMMY_CLIMBERS } from "../data/dummyClimbers";
 import { getCurrentLocation, type UserCoords } from "../lib/location";
@@ -26,11 +34,21 @@ export default function Index() {
     );
   }
 
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>QuickLink</Text>
-        <Text style={styles.subtitle}>Find climbing partners</Text>
+        <View style={styles.headerLeft}>
+          <Text style={styles.title}>QuickLink</Text>
+          <Text style={styles.subtitle}>Find climbing partners</Text>
+        </View>
+        <Pressable
+          onPress={() => router.push("/edit-profile")}
+          style={({ pressed }) => [styles.editProfileBtn, pressed && styles.editProfileBtnPressed]}
+        >
+          <Text style={styles.editProfileText}>Edit profile</Text>
+        </Pressable>
       </View>
       <SwipeStack climbers={DUMMY_CLIMBERS} userLocation={userLocation} />
     </SafeAreaView>
@@ -43,10 +61,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: "#f5f5f5",
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 16,
+  },
+  headerLeft: {},
+  editProfileBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    backgroundColor: "#e8f4f8",
+  },
+  editProfileBtnPressed: {
+    opacity: 0.8,
+  },
+  editProfileText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#1a5f7a",
   },
   title: {
     fontSize: 28,

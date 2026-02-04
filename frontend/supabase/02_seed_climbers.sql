@@ -1,0 +1,105 @@
+-- QuickLink seed: dummy climbers (well-known climbers, Commons photos)
+-- Run after 01_schema.sql in Supabase Dashboard → SQL Editor.
+-- Uses the same data as frontend/data/dummyClimbers.ts.
+
+set search_path to public;
+
+insert into public.climbers (
+  first_name,
+  age,
+  latitude,
+  longitude,
+  climbing_types,
+  bio,
+  photo_urls
+) values
+(
+  'Alex',
+  31,
+  37.7749,
+  -122.4194,
+  array['sport', 'bouldering'],
+  'Sport and bouldering. Always down to try hard projects or just have a good session. Looking for reliable partners who want to push grades.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/400px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG'
+  ]
+),
+(
+  'Adam',
+  32,
+  40.01499,
+  -105.27055,
+  array['sport', 'bouldering'],
+  'Lead and boulder. Love long sport routes and hard boulders. Prefer early starts and full days at the crag.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/e/e3/Adam_Ondra_Climbing_WCh_2018.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Adam_Ondra_climbing_Silence,_9c_by_PAVEL_BLAZEK_1.jpg/400px-Adam_Ondra_climbing_Silence,_9c_by_PAVEL_BLAZEK_1.jpg'
+  ]
+),
+(
+  'Janja',
+  26,
+  37.7749,
+  -122.41,
+  array['sport', 'bouldering'],
+  'Competition and outdoor—lead and boulder. Happy to session projects or try new crags. Looking for partners who want to try hard and have fun.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/600px-Janja_Garnbret_SLO_2017-08-19_2267.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg/400px-Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg'
+  ]
+),
+(
+  'Chris',
+  44,
+  37.7755,
+  -122.418,
+  array['sport'],
+  'Sport climbing. Decades on the rock—love long routes and hard projects. Down for deep water solo or classic sport. Prefer partners who want full days.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/8/80/Chris_Sharma_-_1.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/4/45/Chris_Sharma_%28USA%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/4/47/2015-04-02_Chris_Sharma.JPG',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Chris_Sharma_-_1.jpg/400px-Chris_Sharma_-_1.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/2015-04-02_Chris_Sharma.JPG/400px-2015-04-02_Chris_Sharma.JPG'
+  ]
+),
+(
+  'Alex',
+  40,
+  40.015,
+  -105.271,
+  array['trad'],
+  'Trad and big wall. Prefer long multipitch and alpine objectives. Have a full rack. Looking for solid partners for long days in the mountains.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/0/0c/Alex_Honnold_El_Capitan_Free_Solo_1.png',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Alex_Honnold_El_Capitan_Free_Solo_1.png/960px-Alex_Honnold_El_Capitan_Free_Solo_1.png'
+  ]
+),
+(
+  'Nathaniel',
+  28,
+  40.01499,
+  -105.27055,
+  array['bouldering'],
+  'Bouldering. Love sessioning projects and exploring new boulder fields. V15–V17 range. Down for long days or quick evening sessions.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/400px-Nathaniel_Coleman_%28USA%29_2019.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/600px-Nathaniel_Coleman_%28USA%29_2019.jpg'
+  ]
+),
+(
+  'Tomoa',
+  29,
+  37.7749,
+  -122.4194,
+  array['bouldering'],
+  'Bouldering and competition. Love hard boulders and trying new problems. Looking for partners to session with and share beta.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/9/94/Tomoa_Narasaki_JPN_1868.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tomoa_Narasaki_%28cropped%29.jpg/400px-Tomoa_Narasaki_%28cropped%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/600px-Tomoa_Narasaki_JPN_1868.jpg'
+  ]
+);

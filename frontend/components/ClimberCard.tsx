@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, Text, View } from "react-native";
 import type { ClimberProfile, ClimbingType } from "../types/climber";
 import { formatDistance } from "../lib/geo";
@@ -47,6 +48,11 @@ export function ClimberCard({ climber, distanceKm }: ClimberCardProps) {
         <Text style={styles.bio} numberOfLines={3}>
           {bioSnippet}
         </Text>
+        <LinearGradient
+          colors={["transparent", "#fff"]}
+          style={styles.footerFade}
+          pointerEvents="none"
+        />
       </View>
     </View>
   );
@@ -100,6 +106,16 @@ const styles = StyleSheet.create({
   },
   footer: {
     padding: 16,
+    position: "relative",
+    paddingBottom: 100,
+  },
+  footerFade: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 80,
+    marginHorizontal: -16,
   },
   chips: {
     flexDirection: "row",

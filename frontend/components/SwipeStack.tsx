@@ -1,6 +1,8 @@
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import * as Haptics from "expo-haptics";
 import { useCallback, useState } from "react";
 import {
+  Pressable,
   StyleSheet,
   Text,
   View,
@@ -18,6 +20,7 @@ import type { ClimberProfile } from "../types/climber";
 import type { UserCoords } from "../lib/location";
 import { getDistanceKm } from "../lib/geo";
 import { ClimberCard } from "./ClimberCard";
+import { ProfileDetailModal } from "./ProfileDetailModal";
 
 const SWIPE_THRESHOLD = 70;
 const returnSpring = { damping: 28, stiffness: 120 };
@@ -30,6 +33,7 @@ interface SwipeStackProps {
 
 export function SwipeStack({ climbers: initialClimbers, userLocation }: SwipeStackProps) {
   const [climbers, setClimbers] = useState(initialClimbers);
+  const [selectedClimber, setSelectedClimber] = useState<ClimberProfile | null>(null);
   const { width: screenWidth } = useWindowDimensions();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -47,6 +51,26 @@ export function SwipeStack({ climbers: initialClimbers, userLocation }: SwipeSta
     translateX.value = 0;
     translateY.value = 0;
   }, [translateX, translateY]);
+
+  const handleNo = useCallback(() => {
+    if (climbers.length === 0) return;
+    translateX.value = withTiming(-screenWidth * 1.2, { duration: EXIT_DURATION }, () => {
+      runOnJS(triggerPass)();
+    });
+    translateY.value = withTiming(0, { duration: EXIT_DURATION });
+  }, [climbers.length, screenWidth, triggerPass]);
+
+  const handleYes = useCallback(() => {
+    if (climbers.length === 0) return;
+    translateX.value = withTiming(screenWidth * 1.2, { duration: EXIT_DURATION }, () => {
+      runOnJS(triggerLike)();
+    });
+    translateY.value = withTiming(0, { duration: EXIT_DURATION });
+  }, [climbers.length, screenWidth, triggerLike]);
+
+  const openProfile = useCallback((climber: ClimberProfile) => {
+    setSelectedClimber(climber);
+  }, []);
 
   const panGesture = Gesture.Pan()
     .onUpdate((e) => {
@@ -74,6 +98,16 @@ export function SwipeStack({ climbers: initialClimbers, userLocation }: SwipeSta
         translateY.value = withSpring(0, returnSpring);
       }
     });
+
+  const tapGesture = Gesture.Tap()
+    .maxDistance(15)
+    .onEnd(() => {
+      if (climbers.length > 0) {
+        runOnJS(openProfile)(climbers[0]);
+      }
+    });
+
+  const composedGesture = Gesture.Race(tapGesture, panGesture);
 
   const animatedCardStyle = useAnimatedStyle(() => {
     const rotate = (translateX.value / screenWidth) * 0.15;
@@ -108,6 +142,7 @@ export function SwipeStack({ climbers: initialClimbers, userLocation }: SwipeSta
 
   return (
     <View style={styles.container}>
+      <View style={styles.cardArea}>
       {cardsToRender.map((climber, i) => {
         const nextDistance =
           userLocation != null
@@ -131,7 +166,7 @@ export function SwipeStack({ climbers: initialClimbers, userLocation }: SwipeSta
           </View>
         );
       })}
-      <GestureDetector gesture={panGesture}>
+      <GestureDetector gesture={composedGesture}>
         <Animated.View
           style={[styles.stackCard, styles.topCard, animatedCardStyle]}
           pointerEvents="box-none"
@@ -139,6 +174,32 @@ export function SwipeStack({ climbers: initialClimbers, userLocation }: SwipeSta
           <ClimberCard climber={top} distanceKm={distanceKm} />
         </Animated.View>
       </GestureDetector>
+      </View>
+      <View style={styles.buttonRow} pointerEvents="box-none">
+        <Pressable
+          style={({ pressed }) => [styles.button, styles.noButton, pressed && styles.buttonPressed]}
+          onPress={handleNo}
+        >
+          <MaterialIcons name="close" size={36} color="#555" />
+        </Pressable>
+        <Pressable
+          style={({ pressed }) => [styles.button, styles.yesButton, pressed && styles.buttonPressed]}
+          onPress={handleYes}
+        >
+          <MaterialIcons name="check" size={36} color="#fff" />
+        </Pressable>
+      </View>
+      {selectedClimber != null && (
+        <ProfileDetailModal
+          climber={selectedClimber}
+          distanceKm={
+            userLocation != null
+              ? getDistanceKm(userLocation, selectedClimber.location)
+              : null
+          }
+          onClose={() => setSelectedClimber(null)}
+        />
+      )}
     </View>
   );
 }
@@ -147,8 +208,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
     paddingHorizontal: 20,
+  },
+  cardArea: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   stackCard: {
     position: "absolute",
@@ -157,6 +223,38 @@ const styles = StyleSheet.create({
   },
   topCard: {
     zIndex: 10,
+  },
+  buttonRow: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 24,
+    paddingVertical: 24,
+    paddingBottom: 32,
+    zIndex: 20,
+  },
+  button: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonPressed: {
+    opacity: 0.8,
+  },
+  noButton: {
+    backgroundColor: "#e8e8e8",
+    borderWidth: 2,
+    borderColor: "#ccc",
+  },
+  yesButton: {
+    backgroundColor: "#1a5f7a",
+    borderWidth: 2,
+    borderColor: "#145266",
   },
   empty: {
     flex: 1,

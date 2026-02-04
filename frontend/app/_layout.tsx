@@ -5,7 +5,7 @@ import { StyleSheet } from "react-native";
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.flex}>
-      <Stack />
+      <Stack screenOptions={{ headerShown: false }} />
     </GestureHandlerRootView>
   );
 }

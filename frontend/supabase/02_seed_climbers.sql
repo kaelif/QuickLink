@@ -1,6 +1,6 @@
--- QuickLink seed: dummy climbers (well-known climbers, Commons photos)
+-- QuickLink seed: dummy climbers (well-known climbers, 4–5 Commons photos each)
 -- Run after 01_schema.sql in Supabase Dashboard → SQL Editor.
--- Uses the same data as frontend/data/dummyClimbers.ts.
+-- Every photo is of the actual famous climber named. Matches frontend/data/dummyClimbers.ts.
 
 set search_path to public;
 
@@ -21,7 +21,11 @@ insert into public.climbers (
   array['sport', 'bouldering'],
   'Sport and bouldering. Always down to try hard projects or just have a good session. Looking for reliable partners who want to push grades.',
   array[
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/400px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG'
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/400px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/600px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/800px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/960px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG',
+    'https://upload.wikimedia.org/wikipedia/commons/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG'
   ]
 ),
 (
@@ -33,7 +37,10 @@ insert into public.climbers (
   'Lead and boulder. Love long sport routes and hard boulders. Prefer early starts and full days at the crag.',
   array[
     'https://upload.wikimedia.org/wikipedia/commons/e/e3/Adam_Ondra_Climbing_WCh_2018.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Adam_Ondra_climbing_Silence,_9c_by_PAVEL_BLAZEK_1.jpg/400px-Adam_Ondra_climbing_Silence,_9c_by_PAVEL_BLAZEK_1.jpg'
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Adam_Ondra_climbing_Silence,_9c_by_PAVEL_BLAZEK_1.jpg/400px-Adam_Ondra_climbing_Silence,_9c_by_PAVEL_BLAZEK_1.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/a/ab/Adam_Ondra_climbing_Silence_9c_by_PAVEL_BLAZEK_2.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/3/3f/Adam_Ondra_climbing_Silence_9c_by_PAVEL_BLAZEK_3.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Adam_Ondra_Climbing_WCh_2018.jpg/600px-Adam_Ondra_Climbing_WCh_2018.jpg'
   ]
 ),
 (
@@ -47,7 +54,8 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/600px-Janja_Garnbret_SLO_2017-08-19_2267.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg/400px-Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg'
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg/600px-Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/960px-Janja_Garnbret_SLO_2017-08-19_2267.jpg'
   ]
 ),
 (
@@ -61,8 +69,8 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/8/80/Chris_Sharma_-_1.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/4/45/Chris_Sharma_%28USA%29.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/4/47/2015-04-02_Chris_Sharma.JPG',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Chris_Sharma_-_1.jpg/400px-Chris_Sharma_-_1.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/2015-04-02_Chris_Sharma.JPG/400px-2015-04-02_Chris_Sharma.JPG'
+    'https://upload.wikimedia.org/wikipedia/commons/9/98/Chris_sharma.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/e/e8/Chris_sharma_%26_skimble.jpg'
   ]
 ),
 (
@@ -74,7 +82,10 @@ insert into public.climbers (
   'Trad and big wall. Prefer long multipitch and alpine objectives. Have a full rack. Looking for solid partners for long days in the mountains.',
   array[
     'https://upload.wikimedia.org/wikipedia/commons/0/0c/Alex_Honnold_El_Capitan_Free_Solo_1.png',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Alex_Honnold_El_Capitan_Free_Solo_1.png/960px-Alex_Honnold_El_Capitan_Free_Solo_1.png'
+    'https://upload.wikimedia.org/wikipedia/commons/0/01/Alex_Honnold_-_Trento_Film_Festival_2014.JPG',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Alex_Honnold_El_Capitan_Free_Solo_1.png/960px-Alex_Honnold_El_Capitan_Free_Solo_1.png',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Alex_Honnold_-_Trento_Film_Festival_2014.JPG/600px-Alex_Honnold_-_Trento_Film_Festival_2014.JPG',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Alex_Honnold_-_Trento_Film_Festival_2014.JPG/960px-Alex_Honnold_-_Trento_Film_Festival_2014.JPG'
   ]
 ),
 (
@@ -87,7 +98,9 @@ insert into public.climbers (
   array[
     'https://upload.wikimedia.org/wikipedia/commons/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/400px-Nathaniel_Coleman_%28USA%29_2019.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/600px-Nathaniel_Coleman_%28USA%29_2019.jpg'
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/600px-Nathaniel_Coleman_%28USA%29_2019.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/800px-Nathaniel_Coleman_%28USA%29_2019.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/960px-Nathaniel_Coleman_%28USA%29_2019.jpg'
   ]
 ),
 (
@@ -100,6 +113,8 @@ insert into public.climbers (
   array[
     'https://upload.wikimedia.org/wikipedia/commons/9/94/Tomoa_Narasaki_JPN_1868.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tomoa_Narasaki_%28cropped%29.jpg/400px-Tomoa_Narasaki_%28cropped%29.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/600px-Tomoa_Narasaki_JPN_1868.jpg'
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/600px-Tomoa_Narasaki_JPN_1868.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/960px-Tomoa_Narasaki_JPN_1868.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tomoa_Narasaki_%28cropped%29.jpg/600px-Tomoa_Narasaki_%28cropped%29.jpg'
   ]
 );

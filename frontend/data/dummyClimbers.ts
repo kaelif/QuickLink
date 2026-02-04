@@ -1,9 +1,8 @@
 import type { ClimberProfile } from "../types/climber";
 
 /**
- * Well-known climbers with real first name, age, and photos from Wikimedia Commons (CC-licensed).
- * Only climbers with at least one real Commons image are included.
- * Multiple photos per climber so the user can swipe through them in the profile.
+ * Well-known climbers with real first name, age, and 4–5 photos each from Wikimedia Commons (CC-licensed).
+ * Every photo is of the actual famous climber named.
  */
 
 const W = "https://upload.wikimedia.org/wikipedia/commons";
@@ -18,6 +17,10 @@ export const DUMMY_CLIMBERS: ClimberProfile[] = [
     bio: "Sport and bouldering. Always down to try hard projects or just have a good session. Looking for reliable partners who want to push grades.",
     photoUrls: [
       `${W}/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/400px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG`,
+      `${W}/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/600px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG`,
+      `${W}/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/800px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG`,
+      `${W}/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/960px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG`,
+      `${W}/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG`,
     ],
   },
   {
@@ -30,6 +33,9 @@ export const DUMMY_CLIMBERS: ClimberProfile[] = [
     photoUrls: [
       `${W}/e/e3/Adam_Ondra_Climbing_WCh_2018.jpg`,
       `${W}/thumb/4/4e/Adam_Ondra_climbing_Silence,_9c_by_PAVEL_BLAZEK_1.jpg/400px-Adam_Ondra_climbing_Silence,_9c_by_PAVEL_BLAZEK_1.jpg`,
+      `${W}/a/ab/Adam_Ondra_climbing_Silence_9c_by_PAVEL_BLAZEK_2.jpg`,
+      `${W}/3/3f/Adam_Ondra_climbing_Silence_9c_by_PAVEL_BLAZEK_3.jpg`,
+      `${W}/thumb/e/e3/Adam_Ondra_Climbing_WCh_2018.jpg/600px-Adam_Ondra_Climbing_WCh_2018.jpg`,
     ],
   },
   {
@@ -43,7 +49,8 @@ export const DUMMY_CLIMBERS: ClimberProfile[] = [
       `${W}/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg`,
       `${W}/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg`,
       `${W}/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/600px-Janja_Garnbret_SLO_2017-08-19_2267.jpg`,
-      `${W}/thumb/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg/400px-Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg`,
+      `${W}/thumb/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg/600px-Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg`,
+      `${W}/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/960px-Janja_Garnbret_SLO_2017-08-19_2267.jpg`,
     ],
   },
   {
@@ -57,8 +64,8 @@ export const DUMMY_CLIMBERS: ClimberProfile[] = [
       `${W}/8/80/Chris_Sharma_-_1.jpg`,
       `${W}/4/45/Chris_Sharma_%28USA%29.jpg`,
       `${W}/4/47/2015-04-02_Chris_Sharma.JPG`,
-      `${W}/thumb/8/80/Chris_Sharma_-_1.jpg/400px-Chris_Sharma_-_1.jpg`,
-      `${W}/thumb/4/47/2015-04-02_Chris_Sharma.JPG/400px-2015-04-02_Chris_Sharma.JPG`,
+      `${W}/9/98/Chris_sharma.jpg`,
+      `${W}/e/e8/Chris_sharma_%26_skimble.jpg`,
     ],
   },
   {
@@ -70,7 +77,10 @@ export const DUMMY_CLIMBERS: ClimberProfile[] = [
     bio: "Trad and big wall. Prefer long multipitch and alpine objectives. Have a full rack. Looking for solid partners for long days in the mountains.",
     photoUrls: [
       `${W}/0/0c/Alex_Honnold_El_Capitan_Free_Solo_1.png`,
+      `${W}/0/01/Alex_Honnold_-_Trento_Film_Festival_2014.JPG`,
       `${W}/thumb/0/0c/Alex_Honnold_El_Capitan_Free_Solo_1.png/960px-Alex_Honnold_El_Capitan_Free_Solo_1.png`,
+      `${W}/thumb/0/01/Alex_Honnold_-_Trento_Film_Festival_2014.JPG/600px-Alex_Honnold_-_Trento_Film_Festival_2014.JPG`,
+      `${W}/thumb/0/01/Alex_Honnold_-_Trento_Film_Festival_2014.JPG/960px-Alex_Honnold_-_Trento_Film_Festival_2014.JPG`,
     ],
   },
   {
@@ -84,6 +94,8 @@ export const DUMMY_CLIMBERS: ClimberProfile[] = [
       `${W}/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg`,
       `${W}/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/400px-Nathaniel_Coleman_%28USA%29_2019.jpg`,
       `${W}/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/600px-Nathaniel_Coleman_%28USA%29_2019.jpg`,
+      `${W}/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/800px-Nathaniel_Coleman_%28USA%29_2019.jpg`,
+      `${W}/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/960px-Nathaniel_Coleman_%28USA%29_2019.jpg`,
     ],
   },
   {
@@ -97,6 +109,8 @@ export const DUMMY_CLIMBERS: ClimberProfile[] = [
       `${W}/9/94/Tomoa_Narasaki_JPN_1868.jpg`,
       `${W}/thumb/5/5a/Tomoa_Narasaki_%28cropped%29.jpg/400px-Tomoa_Narasaki_%28cropped%29.jpg`,
       `${W}/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/600px-Tomoa_Narasaki_JPN_1868.jpg`,
+      `${W}/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/960px-Tomoa_Narasaki_JPN_1868.jpg`,
+      `${W}/thumb/5/5a/Tomoa_Narasaki_%28cropped%29.jpg/600px-Tomoa_Narasaki_%28cropped%29.jpg`,
     ],
   },
 ];

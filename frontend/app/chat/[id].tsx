@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -63,12 +64,13 @@ export default function ChatScreen() {
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
+          <Ionicons name="chevron-back" size={22} color="#1a5f7a" />
           <Text style={styles.backText}>Back</Text>
         </Pressable>
         <Text style={styles.headerTitle}>
           {match.firstName}, {match.age}
         </Text>
-        <View style={styles.backBtn} />
+        <View style={styles.backBtnSpacer} />
       </View>
       <KeyboardAvoidingView
         style={styles.flex}
@@ -143,6 +145,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   backBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 8,
+    minWidth: 60,
+    gap: 6,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "#1a5f7a",
+    backgroundColor: BACKGROUND_COLOR,
+    borderRadius: 8,
+  },
+  backBtnSpacer: {
     padding: 8,
     minWidth: 60,
   },

@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
@@ -96,10 +97,11 @@ export default function MessagesScreen() {
       <SafeAreaView style={styles.container} edges={["top"]}>
         <View style={styles.header}>
           <Pressable onPress={() => router.back()} style={styles.backBtn}>
+            <Ionicons name="chevron-back" size={22} color="#1a5f7a" />
             <Text style={styles.backText}>Back</Text>
           </Pressable>
           <Text style={styles.headerTitle}>Messages</Text>
-          <View style={styles.backBtn} />
+          <View style={styles.backBtnSpacer} />
         </View>
         <View style={styles.empty}>
           <Text style={styles.emptyTitle}>No matches yet</Text>
@@ -115,10 +117,11 @@ export default function MessagesScreen() {
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
+          <Ionicons name="chevron-back" size={22} color="#1a5f7a" />
           <Text style={styles.backText}>Back</Text>
         </Pressable>
         <Text style={styles.headerTitle}>Messages</Text>
-        <View style={styles.backBtn} />
+        <View style={styles.backBtnSpacer} />
       </View>
       <ScrollView
         style={styles.scroll}
@@ -190,6 +193,17 @@ const styles = StyleSheet.create({
     backgroundColor: BACKGROUND_COLOR,
   },
   backBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 8,
+    minWidth: 60,
+    gap: 6,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "#1a5f7a",
+    backgroundColor: BACKGROUND_COLOR,
+    borderRadius: 8,
+  },
+  backBtnSpacer: {
     padding: 8,
     minWidth: 60,
   },

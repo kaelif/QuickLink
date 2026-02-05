@@ -43,7 +43,7 @@ export default function Index() {
   const { addMatch } = useMatches();
   const isDark = colorScheme === "dark";
   const loadingTextColor = isDark ? "#ffffff" : "#000000";
-  const loadingBgColor = isDark ? "#1a1a1a" : "#F0F2F5";
+  const loadingBgColor = isDark ? "#1a1a1a" : "#7e8c91";
   const loadingSpinnerColor = isDark ? "#ffffff" : "#1a5f7a";
 
   // Card order: filtered list, then sorted by distance (nearest first) when location is available.
@@ -130,13 +130,13 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F2F5",
+    backgroundColor: "#7e8c91",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#F0F2F5",
+    backgroundColor: "#7e8c91",
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 16,

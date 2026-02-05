@@ -64,7 +64,7 @@ export function ClimberCard({ climber, distanceKm }: ClimberCardProps) {
       </View>
       {Platform.OS === "android" && (
         <LinearGradient
-          colors={["transparent", "rgba(240,242,245,0.7)", "#F0F2F5"]}
+          colors={["transparent", "rgba(126,140,145,0.7)", "#7e8c91"]}
           style={styles.cardBottomFade}
           pointerEvents="none"
         />

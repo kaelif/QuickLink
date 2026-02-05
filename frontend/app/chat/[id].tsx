@@ -126,7 +126,7 @@ export default function ChatScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F2F5",
+    backgroundColor: "#7e8c91",
   },
   flex: {
     flex: 1,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: "#F0F2F5",
+    backgroundColor: "#7e8c91",
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 22,

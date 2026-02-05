@@ -10,7 +10,6 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
@@ -19,9 +18,10 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import type { ClimberProfile } from "../types/climber";
-import type { UserCoords } from "../lib/location";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getDistanceKm } from "../lib/geo";
+import type { UserCoords } from "../lib/location";
+import type { ClimberProfile } from "../types/climber";
 import { ClimberCard } from "./ClimberCard";
 import { ProfileDetailModal } from "./ProfileDetailModal";
 
@@ -40,7 +40,7 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
   const [selectedClimber, setSelectedClimber] = useState<ClimberProfile | null>(null);
   const { width: screenWidth } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const bottomInset = insets.bottom;
+  const bottomInset = Platform.OS === "android" ? insets.bottom : 0;
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
@@ -150,7 +150,12 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
 
   return (
     <View style={styles.container}>
-      <View style={styles.cardArea}>
+      <View
+        style={[
+          styles.cardArea,
+          Platform.OS === "ios" && styles.cardAreaIos,
+        ]}
+      >
       {cardsToRender.map((climber, i) => {
         const nextDistance =
           userLocation != null
@@ -183,23 +188,16 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
         </Animated.View>
       </GestureDetector>
       </View>
-      {/* Solid strip at bottom so no white bar in safe area */}
-      {bottomInset > 0 && (
-        <View
-          style={[
-            styles.bottomFiller,
-            { height: bottomInset },
-          ]}
-          pointerEvents="none"
-        />
-      )}
       <LinearGradient
-        colors={["transparent", "rgba(240,242,245,0.5)", "#F0F2F5"]}
-        style={[styles.buttonRowFade, { height: 180 + bottomInset }]}
+        colors={["transparent", "rgba(126,140,145,0.6)", "#7e8c91"]}
+        style={[styles.buttonRowFade, { height: 160 + bottomInset }]}
         pointerEvents="none"
       />
       <View
-        style={[styles.buttonRow, { paddingBottom: 24 + bottomInset }]}
+        style={[
+          styles.buttonRow,
+          Platform.OS === "android" && { paddingBottom: 24 + bottomInset },
+        ]}
         pointerEvents="box-none"
       >
         <Pressable
@@ -242,6 +240,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  cardAreaIos: {
+    paddingTop: 48,
+  },
   stackCard: {
     position: "absolute",
     width: "100%",
@@ -249,14 +250,6 @@ const styles = StyleSheet.create({
   },
   topCard: {
     zIndex: 10,
-  },
-  bottomFiller: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "#F0F2F5",
-    zIndex: 14,
   },
   buttonRowFade: {
     position: "absolute",

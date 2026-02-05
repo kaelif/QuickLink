@@ -1,5 +1,7 @@
 export type ClimbingType = "sport" | "bouldering" | "trad";
 
+export type Gender = "woman" | "man" | "nonbinary" | "other";
+
 export interface ClimberLocation {
   latitude: number;
   longitude: number;
@@ -13,4 +15,5 @@ export interface ClimberProfile {
   climbingTypes: ClimbingType[];
   bio: string;
   photoUrls: string[];
+  gender?: Gender;
 }

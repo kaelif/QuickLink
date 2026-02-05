@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -8,13 +8,38 @@ import {
   Text,
   View,
 } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SwipeStack } from "../components/SwipeStack";
+import { useFilter } from "../context/FilterContext";
 import { DUMMY_CLIMBERS } from "../data/dummyClimbers";
 import { getCurrentLocation, type UserCoords } from "../lib/location";
+import type { ClimberProfile } from "../types/climber";
+
+function applyFilter(climbers: ClimberProfile[], filter: ReturnType<typeof useFilter>["filter"]) {
+  return climbers.filter((c) => {
+    if (c.age < filter.ageMin || c.age > filter.ageMax) return false;
+    if (filter.genderPreferences.length > 0 && !filter.genderPreferences.includes("all")) {
+      if (c.gender == null) return true;
+      if (c.gender === "other") return false;
+      if (!filter.genderPreferences.includes(c.gender)) return false;
+    }
+    if (filter.climbingTypes.length > 0) {
+      const hasMatch = filter.climbingTypes.some((t) => c.climbingTypes.includes(t));
+      if (!hasMatch) return false;
+    }
+    return true;
+  });
+}
 
 export default function Index() {
   const [userLocation, setUserLocation] = useState<UserCoords | null>(null);
   const [locationLoading, setLocationLoading] = useState(true);
+  const { filter } = useFilter();
+
+  const filteredClimbers = useMemo(
+    () => applyFilter(DUMMY_CLIMBERS, filter),
+    [filter.ageMin, filter.ageMax, filter.genderPreferences, filter.climbingTypes]
+  );
 
   useEffect(() => {
     getCurrentLocation().then((coords) => {
@@ -43,14 +68,24 @@ export default function Index() {
           <Text style={styles.title}>QuickLink</Text>
           <Text style={styles.subtitle}>Find climbing partners</Text>
         </View>
-        <Pressable
-          onPress={() => router.push("/edit-profile")}
-          style={({ pressed }) => [styles.editProfileBtn, pressed && styles.editProfileBtnPressed]}
-        >
-          <Text style={styles.editProfileText}>Edit profile</Text>
-        </Pressable>
+        <View style={styles.headerButtons}>
+          <Pressable
+            onPress={() => router.push("/filter")}
+            style={({ pressed }) => [styles.headerBtn, styles.headerIconBtn, pressed && styles.headerBtnPressed]}
+            accessibilityLabel="Filter"
+          >
+            <MaterialCommunityIcons name="tune" size={22} color="#1a5f7a" />
+          </Pressable>
+          <Pressable
+            onPress={() => router.push("/edit-profile")}
+            style={({ pressed }) => [styles.headerBtn, styles.headerIconBtn, pressed && styles.headerBtnPressed]}
+            accessibilityLabel="Edit profile"
+          >
+            <MaterialCommunityIcons name="pencil" size={22} color="#1a5f7a" />
+          </Pressable>
+        </View>
       </View>
-      <SwipeStack climbers={DUMMY_CLIMBERS} userLocation={userLocation} />
+      <SwipeStack climbers={filteredClimbers} userLocation={userLocation} />
     </SafeAreaView>
   );
 }
@@ -70,19 +105,23 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   headerLeft: {},
-  editProfileBtn: {
+  headerButtons: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  headerBtn: {
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 8,
     backgroundColor: "#e8f4f8",
   },
-  editProfileBtnPressed: {
-    opacity: 0.8,
+  headerIconBtn: {
+    paddingHorizontal: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  editProfileText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#1a5f7a",
+  headerBtnPressed: {
+    opacity: 0.8,
   },
   title: {
     fontSize: 28,

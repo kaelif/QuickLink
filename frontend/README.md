@@ -7,7 +7,8 @@
 - **Swipe stack**: Browse climber profiles with a card stack. Swipe left to pass, right to like, or use the X and check buttons.
 - **Distance**: Shows how far each person is from you (e.g. “5 km away”) using your device location. Exact locations are not shown.
 - **Profile detail**: Tap a card to open a full profile with multiple photos, full bio, and climbing types.
-- **Edit profile**: Set your own bio, photos (URLs), gender, climbing types, age preferences, and who you’d like to see (gender preferences). Profile is saved locally on the device.
+- **Edit profile**: Set your own bio, photos (URLs), gender, and climbing types. Profile is saved locally on the device.
+- **Filter**: From the main screen, filter who you see by age range, gender (show me: women, men, non-binary, everyone), and climbing types (match with climbers who do any of the selected types). Filter is saved locally.
 
 The app uses dummy data (well-known climbers with real photos from Wikimedia Commons) so you can try the flow without a backend.
 

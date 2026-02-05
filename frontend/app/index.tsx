@@ -11,6 +11,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SwipeStack } from "../components/SwipeStack";
 import { useFilter } from "../context/FilterContext";
+import { useMatches } from "../context/MatchesContext";
 import { DUMMY_CLIMBERS } from "../data/dummyClimbers";
 import { getCurrentLocation, type UserCoords } from "../lib/location";
 import type { ClimberProfile } from "../types/climber";
@@ -35,6 +36,7 @@ export default function Index() {
   const [userLocation, setUserLocation] = useState<UserCoords | null>(null);
   const [locationLoading, setLocationLoading] = useState(true);
   const { filter } = useFilter();
+  const { addMatch } = useMatches();
 
   const filteredClimbers = useMemo(
     () => applyFilter(DUMMY_CLIMBERS, filter),
@@ -70,6 +72,13 @@ export default function Index() {
         </View>
         <View style={styles.headerButtons}>
           <Pressable
+            onPress={() => router.push("/messages")}
+            style={({ pressed }) => [styles.headerBtn, styles.headerIconBtn, pressed && styles.headerBtnPressed]}
+            accessibilityLabel="Messages"
+          >
+            <MaterialCommunityIcons name="message-text-outline" size={22} color="#1a5f7a" />
+          </Pressable>
+          <Pressable
             onPress={() => router.push("/filter")}
             style={({ pressed }) => [styles.headerBtn, styles.headerIconBtn, pressed && styles.headerBtnPressed]}
             accessibilityLabel="Filter"
@@ -85,7 +94,7 @@ export default function Index() {
           </Pressable>
         </View>
       </View>
-      <SwipeStack climbers={filteredClimbers} userLocation={userLocation} />
+      <SwipeStack climbers={filteredClimbers} userLocation={userLocation} onLike={addMatch} />
     </SafeAreaView>
   );
 }

@@ -29,9 +29,10 @@ const EXIT_DURATION = 180;
 interface SwipeStackProps {
   climbers: ClimberProfile[];
   userLocation: UserCoords | null;
+  onLike?: (climber: ClimberProfile) => void;
 }
 
-export function SwipeStack({ climbers: initialClimbers, userLocation }: SwipeStackProps) {
+export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: SwipeStackProps) {
   const [climbers, setClimbers] = useState(initialClimbers);
   const [selectedClimber, setSelectedClimber] = useState<ClimberProfile | null>(null);
   const { width: screenWidth } = useWindowDimensions();
@@ -47,10 +48,12 @@ export function SwipeStack({ climbers: initialClimbers, userLocation }: SwipeSta
 
   const triggerLike = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    const liked = climbers[0];
+    if (liked) onLike?.(liked);
     setClimbers((prev) => prev.slice(1));
     translateX.value = 0;
     translateY.value = 0;
-  }, [translateX, translateY]);
+  }, [climbers, onLike, translateX, translateY]);
 
   const handleNo = useCallback(() => {
     if (climbers.length === 0) return;

@@ -1,4 +1,5 @@
 import { FilterProvider } from "../context/FilterContext";
+import { MatchesProvider } from "../context/MatchesContext";
 import { UserProfileProvider } from "../context/UserProfileContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Stack } from "expo-router";
@@ -9,7 +10,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.flex}>
       <UserProfileProvider>
         <FilterProvider>
-          <Stack screenOptions={{ headerShown: false }} />
+          <MatchesProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+          </MatchesProvider>
         </FilterProvider>
       </UserProfileProvider>
     </GestureHandlerRootView>

@@ -10,6 +10,18 @@ const W = "https://upload.wikimedia.org/wikipedia/commons";
 
 export const DUMMY_CLIMBERS: ClimberProfile[] = [
   {
+    id: "1",
+    firstName: "Alex",
+    age: 31,
+    gender: "man",
+    location: { latitude: 37.7749, longitude: -122.4194 },
+    climbingTypes: ["sport", "bouldering"],
+    bio: "Sport and bouldering. Always down to try hard projects or just have a good session. Looking for reliable partners who want to push grades.",
+    photoUrls: [
+      `${W}/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/600px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG`,
+    ],
+  },
+  {
     id: "2",
     firstName: "Adam",
     age: 32,

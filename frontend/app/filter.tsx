@@ -193,7 +193,7 @@ export default function FilterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#c0ccd1",
+    backgroundColor: "#F0F2F5",
   },
   flex: {
     flex: 1,

@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import type { ClimberProfile, ClimbingType } from "../types/climber";
 import { formatDistance } from "../lib/geo";
 
@@ -62,6 +62,13 @@ export function ClimberCard({ climber, distanceKm }: ClimberCardProps) {
           pointerEvents="none"
         />
       </View>
+      {Platform.OS === "android" && (
+        <LinearGradient
+          colors={["transparent", "rgba(240,242,245,0.7)", "#F0F2F5"]}
+          style={styles.cardBottomFade}
+          pointerEvents="none"
+        />
+      )}
     </View>
   );
 }
@@ -76,6 +83,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 12,
     elevation: 6,
+  },
+  cardBottomFade: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 140,
+    zIndex: 10,
   },
   imageWrap: {
     width: "100%",

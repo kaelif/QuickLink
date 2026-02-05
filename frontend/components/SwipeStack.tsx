@@ -40,7 +40,7 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
   const [selectedClimber, setSelectedClimber] = useState<ClimberProfile | null>(null);
   const { width: screenWidth } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const bottomInset = Platform.OS === "android" ? insets.bottom : 0;
+  const bottomInset = insets.bottom;
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
@@ -183,16 +183,23 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
         </Animated.View>
       </GestureDetector>
       </View>
+      {/* Solid strip at bottom so no white bar in safe area */}
+      {bottomInset > 0 && (
+        <View
+          style={[
+            styles.bottomFiller,
+            { height: bottomInset },
+          ]}
+          pointerEvents="none"
+        />
+      )}
       <LinearGradient
-        colors={["transparent", "rgba(192,204,209,0.6)", "#c0ccd1"]}
-        style={[styles.buttonRowFade, { height: 160 + bottomInset }]}
+        colors={["transparent", "rgba(240,242,245,0.5)", "#F0F2F5"]}
+        style={[styles.buttonRowFade, { height: 180 + bottomInset }]}
         pointerEvents="none"
       />
       <View
-        style={[
-          styles.buttonRow,
-          Platform.OS === "android" && { paddingBottom: 24 + bottomInset },
-        ]}
+        style={[styles.buttonRow, { paddingBottom: 24 + bottomInset }]}
         pointerEvents="box-none"
       >
         <Pressable
@@ -242,6 +249,14 @@ const styles = StyleSheet.create({
   },
   topCard: {
     zIndex: 10,
+  },
+  bottomFiller: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#F0F2F5",
+    zIndex: 14,
   },
   buttonRowFade: {
     position: "absolute",

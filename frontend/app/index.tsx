@@ -43,7 +43,7 @@ export default function Index() {
   const { addMatch } = useMatches();
   const isDark = colorScheme === "dark";
   const loadingTextColor = isDark ? "#ffffff" : "#000000";
-  const loadingBgColor = isDark ? "#1a1a1a" : "#c0ccd1";
+  const loadingBgColor = isDark ? "#1a1a1a" : "#F0F2F5";
   const loadingSpinnerColor = isDark ? "#ffffff" : "#1a5f7a";
 
   // Card order: filtered list, then sorted by distance (nearest first) when location is available.
@@ -92,7 +92,7 @@ export default function Index() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Text style={styles.title}>QuickLink</Text>
@@ -130,13 +130,13 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#c0ccd1",
+    backgroundColor: "#F0F2F5",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#c0ccd1",
+    backgroundColor: "#F0F2F5",
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 16,

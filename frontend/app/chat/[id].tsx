@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMatches } from "../../context/MatchesContext";
+import { BACKGROUND_COLOR } from "../../lib/theme";
 import type { Message } from "../../context/MatchesContext";
 
 function MessageBubble({ msg }: { msg: Message }) {
@@ -126,7 +127,7 @@ export default function ChatScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#7e8c91",
+    backgroundColor: BACKGROUND_COLOR,
   },
   flex: {
     flex: 1,
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: "#7e8c91",
+    backgroundColor: BACKGROUND_COLOR,
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 22,

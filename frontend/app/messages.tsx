@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMatches } from "../context/MatchesContext";
+import { BACKGROUND_COLOR } from "../lib/theme";
 import type { ClimberProfile } from "../types/climber";
 
 function MatchRow({
@@ -178,7 +179,7 @@ export default function MessagesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#7e8c91",
+    backgroundColor: BACKGROUND_COLOR,
   },
   header: {
     flexDirection: "row",
@@ -186,9 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#ddd",
-    backgroundColor: "#fff",
+    backgroundColor: BACKGROUND_COLOR,
   },
   backBtn: {
     padding: 8,
@@ -259,7 +258,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   conversationsList: {
-    backgroundColor: "#fff",
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     overflow: "hidden",
@@ -271,7 +269,6 @@ const styles = StyleSheet.create({
   },
   conversationsEmptyText: {
     fontSize: 15,
-    color: "#666",
     textAlign: "center",
   },
   row: {

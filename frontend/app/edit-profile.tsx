@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserProfile } from "../context/UserProfileContext";
+import { BACKGROUND_COLOR } from "../lib/theme";
 import type { ClimbingType } from "../types/climber";
 import type { Gender, UserProfile } from "../types/userProfile";
 
@@ -225,7 +226,7 @@ export default function EditProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#7e8c91",
+    backgroundColor: BACKGROUND_COLOR,
   },
   flex: {
     flex: 1,

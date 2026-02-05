@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { BACKGROUND_COLOR } from "../lib/theme";
 import type { ClimbingType } from "../types/climber";
 import type { GradeRange } from "../types/userProfile";
 import { getGradesForType } from "../lib/grades";
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 10,
-    backgroundColor: "#7e8c91",
+    backgroundColor: BACKGROUND_COLOR,
     borderWidth: 1,
     borderColor: "#ddd",
   },

@@ -21,6 +21,7 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getDistanceKm } from "../lib/geo";
 import type { UserCoords } from "../lib/location";
+import { BACKGROUND_COLOR, backgroundRgba } from "../lib/theme";
 import type { ClimberProfile } from "../types/climber";
 import { ClimberCard } from "./ClimberCard";
 import { ProfileDetailModal } from "./ProfileDetailModal";
@@ -189,7 +190,7 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
       </GestureDetector>
       </View>
       <LinearGradient
-        colors={["transparent", "rgba(126,140,145,0.6)", "#7e8c91"]}
+        colors={["transparent", backgroundRgba(0.6), BACKGROUND_COLOR]}
         style={[styles.buttonRowFade, { height: 160 + bottomInset }]}
         pointerEvents="none"
       />

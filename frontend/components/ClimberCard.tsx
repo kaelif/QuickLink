@@ -3,8 +3,9 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
-import type { ClimberProfile, ClimbingType } from "../types/climber";
 import { formatDistance } from "../lib/geo";
+import { BACKGROUND_COLOR, backgroundRgba } from "../lib/theme";
+import type { ClimberProfile, ClimbingType } from "../types/climber";
 
 const CLIMBING_LABELS: Record<ClimbingType, string> = {
   sport: "Sport",
@@ -64,7 +65,7 @@ export function ClimberCard({ climber, distanceKm }: ClimberCardProps) {
       </View>
       {Platform.OS === "android" && (
         <LinearGradient
-          colors={["transparent", "rgba(126,140,145,0.7)", "#7e8c91"]}
+          colors={["transparent", backgroundRgba(0.7), BACKGROUND_COLOR]}
           style={styles.cardBottomFade}
           pointerEvents="none"
         />

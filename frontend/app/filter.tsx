@@ -205,9 +205,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#ddd",
-    backgroundColor: "#fff",
+    backgroundColor: BACKGROUND_COLOR,
   },
   cancelButton: {
     padding: 8,
@@ -249,7 +247,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    backgroundColor: "#fff",
+    backgroundColor: BACKGROUND_COLOR,
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 10,
@@ -280,7 +278,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 10,
-    backgroundColor: "#fff",
+    backgroundColor: BACKGROUND_COLOR,
     borderWidth: 1,
     borderColor: "#ddd",
   },

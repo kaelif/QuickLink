@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   noButton: {
-    backgroundColor: "#e8e8e8",
+    backgroundColor: BACKGROUND_COLOR,
     borderWidth: 2,
     borderColor: "#ccc",
   },

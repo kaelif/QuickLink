@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { formatDistance } from "../lib/geo";
+import { BACKGROUND_COLOR } from "../lib/theme";
 import type { ClimberProfile, ClimbingType } from "../types/climber";
 
 const CLIMBING_LABELS: Record<ClimbingType, string> = {
@@ -120,7 +121,7 @@ export function ProfileDetailModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: BACKGROUND_COLOR,
   },
   header: {
     flexDirection: "row",
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   photoPlaceholder: {
-    backgroundColor: "#e5e5e5",
+    backgroundColor: BACKGROUND_COLOR,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   chip: {
-    backgroundColor: "#e8f4f8",
+    backgroundColor: BACKGROUND_COLOR,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,

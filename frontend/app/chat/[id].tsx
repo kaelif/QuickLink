@@ -12,9 +12,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import type { Message } from "../../context/MatchesContext";
 import { useMatches } from "../../context/MatchesContext";
 import { BACKGROUND_COLOR } from "../../lib/theme";
-import type { Message } from "../../context/MatchesContext";
 
 function MessageBubble({ msg }: { msg: Message }) {
   return (
@@ -140,9 +140,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#ddd",
-    backgroundColor: "#fff",
+    backgroundColor: BACKGROUND_COLOR,
   },
   backBtn: {
     flexDirection: "row",
@@ -186,7 +184,7 @@ const styles = StyleSheet.create({
   },
   bubbleThem: {
     alignSelf: "flex-start",
-    backgroundColor: "#fff",
+    backgroundColor: BACKGROUND_COLOR,
     borderWidth: 1,
     borderColor: "#ddd",
   },
@@ -214,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: "#fff",
+    backgroundColor: BACKGROUND_COLOR,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: "#ddd",
     gap: 12,

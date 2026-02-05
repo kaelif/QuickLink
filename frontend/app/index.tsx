@@ -17,6 +17,7 @@ import { useMatches } from "../context/MatchesContext";
 import { DUMMY_CLIMBERS } from "../data/dummyClimbers";
 import { getDistanceKm } from "../lib/geo";
 import { getCurrentLocation, type UserCoords } from "../lib/location";
+import { BACKGROUND_COLOR } from "../lib/theme";
 import type { ClimberProfile } from "../types/climber";
 
 function applyFilter(climbers: ClimberProfile[], filter: ReturnType<typeof useFilter>["filter"]) {
@@ -43,7 +44,7 @@ export default function Index() {
   const { addMatch } = useMatches();
   const isDark = colorScheme === "dark";
   const loadingTextColor = isDark ? "#ffffff" : "#000000";
-  const loadingBgColor = isDark ? "#1a1a1a" : "#7e8c91";
+  const loadingBgColor = BACKGROUND_COLOR;
   const loadingSpinnerColor = isDark ? "#ffffff" : "#1a5f7a";
 
   // Card order: filtered list, then sorted by distance (nearest first) when location is available.
@@ -130,13 +131,13 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#7e8c91",
+    backgroundColor: BACKGROUND_COLOR,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#7e8c91",
+    backgroundColor: BACKGROUND_COLOR,
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 16,
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 8,
-    backgroundColor: "#e8f4f8",
+    backgroundColor: BACKGROUND_COLOR,
   },
   headerIconBtn: {
     paddingHorizontal: 10,
@@ -167,8 +168,9 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 15,
-    color: "#666",
+    color: "#FFFFFF",
     marginTop: 2,
+    marginLeft: 2
   },
   loading: {
     flex: 1,

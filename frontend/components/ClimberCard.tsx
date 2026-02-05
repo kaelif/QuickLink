@@ -76,7 +76,7 @@ export function ClimberCard({ climber, distanceKm }: ClimberCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: BACKGROUND_COLOR,
     borderRadius: 16,
     overflow: "hidden",
     shadowColor: "#000",
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 3 / 4,
     position: "relative",
-    backgroundColor: "#e5e5e5",
+    backgroundColor: BACKGROUND_COLOR,
   },
   image: {
     width: "100%",
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#e5e5e5",
+    backgroundColor: BACKGROUND_COLOR,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   chip: {
-    backgroundColor: "#e8f4f8",
+    backgroundColor: BACKGROUND_COLOR,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 8,

@@ -10,7 +10,6 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
@@ -19,9 +18,10 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import type { ClimberProfile } from "../types/climber";
-import type { UserCoords } from "../lib/location";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getDistanceKm } from "../lib/geo";
+import type { UserCoords } from "../lib/location";
+import type { ClimberProfile } from "../types/climber";
 import { ClimberCard } from "./ClimberCard";
 import { ProfileDetailModal } from "./ProfileDetailModal";
 
@@ -150,7 +150,12 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
 
   return (
     <View style={styles.container}>
-      <View style={styles.cardArea}>
+      <View
+        style={[
+          styles.cardArea,
+          Platform.OS === "ios" && styles.cardAreaIos,
+        ]}
+      >
       {cardsToRender.map((climber, i) => {
         const nextDistance =
           userLocation != null
@@ -234,6 +239,9 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  cardAreaIos: {
+    paddingTop: 408,
   },
   stackCard: {
     position: "absolute",

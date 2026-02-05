@@ -1,6 +1,13 @@
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { useMemo } from "react";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMatches } from "../context/MatchesContext";
 import type { ClimberProfile } from "../types/climber";
@@ -44,9 +51,44 @@ function MatchRow({
   );
 }
 
+function MatchAvatar({
+  match,
+  onPress,
+}: {
+  match: ClimberProfile;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.avatarChip, pressed && styles.avatarChipPressed]}
+    >
+      <View style={styles.avatarChipImageWrap}>
+        <Image
+          source={{ uri: match.photoUrls[0] }}
+          style={styles.avatarChipImage}
+          contentFit="cover"
+        />
+      </View>
+      <Text style={styles.avatarChipName} numberOfLines={1}>
+        {match.firstName}
+      </Text>
+    </Pressable>
+  );
+}
+
 export default function MessagesScreen() {
   const router = useRouter();
   const { matches, getMessages } = useMatches();
+
+  const newMatches = useMemo(
+    () => matches.filter((m) => getMessages(m.id).length === 0),
+    [matches, getMessages]
+  );
+  const matchesWithMessages = useMemo(
+    () => matches.filter((m) => getMessages(m.id).length > 0),
+    [matches, getMessages]
+  );
 
   if (matches.length === 0) {
     return (
@@ -77,23 +119,58 @@ export default function MessagesScreen() {
         <Text style={styles.headerTitle}>Messages</Text>
         <View style={styles.backBtn} />
       </View>
-      <FlatList
-        data={matches}
-        keyExtractor={(m) => m.id}
-        contentContainerStyle={styles.list}
-        renderItem={({ item }) => {
-          const msgs = getMessages(item.id);
-          const last = msgs.length > 0 ? msgs[msgs.length - 1] : null;
-          const lastText = last?.text ?? null;
-          return (
-            <MatchRow
-              match={item}
-              lastMessage={lastText}
-              onPress={() => router.push(`/chat/${item.id}`)}
-            />
-          );
-        }}
-      />
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.newMatchesSection}>
+          <Text style={styles.sectionTitle}>New matches</Text>
+          {newMatches.length === 0 ? (
+            <Text style={styles.sectionEmpty}>No new matches</Text>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.newMatchesRow}
+            >
+              {newMatches.map((match) => (
+                <MatchAvatar
+                  key={match.id}
+                  match={match}
+                  onPress={() => router.push(`/chat/${match.id}`)}
+                />
+              ))}
+            </ScrollView>
+          )}
+        </View>
+        <View style={styles.conversationsSection}>
+          <Text style={styles.sectionTitle}>Conversations</Text>
+          {matchesWithMessages.length === 0 ? (
+            <View style={styles.conversationsEmpty}>
+              <Text style={styles.conversationsEmptyText}>
+                No conversations yet. Tap a new match above to send a message.
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.conversationsList}>
+              {matchesWithMessages.map((match) => {
+                const msgs = getMessages(match.id);
+                const last = msgs.length > 0 ? msgs[msgs.length - 1] : null;
+                const lastText = last?.text ?? null;
+                return (
+                  <MatchRow
+                    key={match.id}
+                    match={match}
+                    lastMessage={lastText}
+                    onPress={() => router.push(`/chat/${match.id}`)}
+                  />
+                );
+              })}
+            </View>
+          )}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -125,6 +202,77 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: "#1a1a1a",
+  },
+  scroll: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 24,
+  },
+  newMatchesSection: {
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
+  sectionTitle: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#555",
+    marginBottom: 12,
+    paddingHorizontal: 20,
+  },
+  sectionEmpty: {
+    fontSize: 14,
+    color: "#999",
+    paddingHorizontal: 20,
+    marginBottom: 8,
+  },
+  newMatchesRow: {
+    paddingHorizontal: 16,
+    paddingRight: 20,
+  },
+  avatarChip: {
+    alignItems: "center",
+    width: 72,
+    marginRight: 12,
+  },
+  avatarChipPressed: {
+    opacity: 0.8,
+  },
+  avatarChipImageWrap: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    overflow: "hidden",
+    marginBottom: 6,
+  },
+  avatarChipImage: {
+    width: "100%",
+    height: "100%",
+  },
+  avatarChipName: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: "#1a1a1a",
+  },
+  conversationsSection: {
+    paddingTop: 8,
+    flex: 1,
+  },
+  conversationsList: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    overflow: "hidden",
+    marginHorizontal: 20,
+  },
+  conversationsEmpty: {
+    paddingVertical: 24,
+    paddingHorizontal: 20,
+  },
+  conversationsEmptyText: {
+    fontSize: 15,
+    color: "#666",
+    textAlign: "center",
   },
   list: {
     paddingBottom: 24,

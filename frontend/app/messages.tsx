@@ -260,6 +260,8 @@ const styles = StyleSheet.create({
   conversationsList: {
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
     overflow: "hidden",
     marginHorizontal: 20,
   },

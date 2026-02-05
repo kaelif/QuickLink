@@ -3,12 +3,14 @@ import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import { useCallback, useState } from "react";
 import {
+  Platform,
   Pressable,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
@@ -37,6 +39,8 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
   const [climbers, setClimbers] = useState(initialClimbers);
   const [selectedClimber, setSelectedClimber] = useState<ClimberProfile | null>(null);
   const { width: screenWidth } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const bottomInset = Platform.OS === "android" ? insets.bottom : 0;
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
@@ -180,11 +184,17 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
       </GestureDetector>
       </View>
       <LinearGradient
-        colors={["transparent", "#f5f5f5"]}
-        style={styles.buttonRowFade}
+        colors={["transparent", "rgba(192,204,209,0.6)", "#c0ccd1"]}
+        style={[styles.buttonRowFade, { height: 160 + bottomInset }]}
         pointerEvents="none"
       />
-      <View style={styles.buttonRow} pointerEvents="box-none">
+      <View
+        style={[
+          styles.buttonRow,
+          Platform.OS === "android" && { paddingBottom: 24 + bottomInset },
+        ]}
+        pointerEvents="box-none"
+      >
         <Pressable
           style={({ pressed }) => [styles.button, styles.noButton, pressed && styles.buttonPressed]}
           onPress={handleNo}
@@ -238,7 +248,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 140,
     zIndex: 15,
   },
   buttonRow: {

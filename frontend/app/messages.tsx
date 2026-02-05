@@ -101,7 +101,7 @@ export default function MessagesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#c0ccd1",
   },
   header: {
     flexDirection: "row",
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eee",
   },
   rowPressed: {
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#b0bcc1",
   },
   avatarWrap: {
     width: 56,

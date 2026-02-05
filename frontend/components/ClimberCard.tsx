@@ -1,5 +1,7 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import type { ClimberProfile, ClimbingType } from "../types/climber";
 import { formatDistance } from "../lib/geo";
@@ -16,17 +18,26 @@ interface ClimberCardProps {
 }
 
 export function ClimberCard({ climber, distanceKm }: ClimberCardProps) {
+  const [imageError, setImageError] = useState(false);
   const bioSnippet =
     climber.bio.length > 120 ? climber.bio.slice(0, 120) + "…" : climber.bio;
+  const photoUrl = climber.photoUrls[0];
 
   return (
     <View style={styles.card}>
       <View style={styles.imageWrap}>
-        <Image
-          source={{ uri: climber.photoUrls[0] }}
-          style={styles.image}
-          contentFit="cover"
-        />
+        {imageError || !photoUrl ? (
+          <View style={styles.imagePlaceholder}>
+            <MaterialCommunityIcons name="image-off-outline" size={48} color="#999" />
+          </View>
+        ) : (
+          <Image
+            source={{ uri: photoUrl }}
+            style={styles.image}
+            contentFit="cover"
+            onError={() => setImageError(true)}
+          />
+        )}
       </View>
       <View style={styles.footer}>
         <Text style={styles.name}>
@@ -70,10 +81,18 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 3 / 4,
     position: "relative",
+    backgroundColor: "#e5e5e5",
   },
   image: {
     width: "100%",
     height: "100%",
+  },
+  imagePlaceholder: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#e5e5e5",
+    justifyContent: "center",
+    alignItems: "center",
   },
   footer: {
     padding: 16,

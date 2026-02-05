@@ -1,5 +1,7 @@
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Image } from "expo-image";
+import { useState } from "react";
 import {
   Dimensions,
   Modal,
@@ -32,6 +34,12 @@ export function ProfileDetailModal({
   distanceKm,
   onClose,
 }: ProfileDetailModalProps) {
+  const [failedPhotoIndices, setFailedPhotoIndices] = useState<Set<number>>(new Set());
+
+  const handlePhotoError = (index: number) => {
+    setFailedPhotoIndices((prev) => new Set(prev).add(index));
+  };
+
   return (
     <Modal
       visible
@@ -60,14 +68,29 @@ export function ProfileDetailModal({
             style={styles.photoScroll}
             contentContainerStyle={styles.photoScrollContent}
           >
-            {climber.photoUrls.map((uri, i) => (
-              <Image
-                key={i}
-                source={{ uri }}
-                style={[styles.photo, { width: IMAGE_SIZE }, i < climber.photoUrls.length - 1 && styles.photoGap]}
-                contentFit="cover"
-              />
-            ))}
+            {climber.photoUrls.map((uri, i) =>
+              failedPhotoIndices.has(i) || !uri ? (
+                <View
+                  key={i}
+                  style={[
+                    styles.photo,
+                    styles.photoPlaceholder,
+                    { width: IMAGE_SIZE },
+                    i < climber.photoUrls.length - 1 && styles.photoGap,
+                  ]}
+                >
+                  <MaterialCommunityIcons name="image-off-outline" size={48} color="#999" />
+                </View>
+              ) : (
+                <Image
+                  key={i}
+                  source={{ uri }}
+                  style={[styles.photo, { width: IMAGE_SIZE }, i < climber.photoUrls.length - 1 && styles.photoGap]}
+                  contentFit="cover"
+                  onError={() => handlePhotoError(i)}
+                />
+              )
+            )}
           </ScrollView>
           <View style={styles.info}>
             <Text style={styles.name}>
@@ -129,6 +152,11 @@ const styles = StyleSheet.create({
   photo: {
     height: IMAGE_SIZE * (4 / 3),
     borderRadius: 12,
+  },
+  photoPlaceholder: {
+    backgroundColor: "#e5e5e5",
+    justifyContent: "center",
+    alignItems: "center",
   },
   photoGap: {
     marginRight: 16,

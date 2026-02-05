@@ -225,7 +225,7 @@ export default function EditProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#c0ccd1",
   },
   flex: {
     flex: 1,

@@ -5,16 +5,17 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   useColorScheme,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { SwipeStack } from "../components/SwipeStack";
 import { useFilter } from "../context/FilterContext";
 import { useMatches } from "../context/MatchesContext";
 import { DUMMY_CLIMBERS } from "../data/dummyClimbers";
+import { getDistanceKm } from "../lib/geo";
 import { getCurrentLocation, type UserCoords } from "../lib/location";
 import type { ClimberProfile } from "../types/climber";
 
@@ -42,13 +43,26 @@ export default function Index() {
   const { addMatch } = useMatches();
   const isDark = colorScheme === "dark";
   const loadingTextColor = isDark ? "#ffffff" : "#000000";
-  const loadingBgColor = isDark ? "#1a1a1a" : "#e8e8e8";
+  const loadingBgColor = isDark ? "#1a1a1a" : "#c0ccd1";
   const loadingSpinnerColor = isDark ? "#ffffff" : "#1a5f7a";
 
-  const filteredClimbers = useMemo(
-    () => applyFilter(DUMMY_CLIMBERS, filter),
-    [filter.ageMin, filter.ageMax, filter.genderPreferences, filter.climbingTypes]
-  );
+  // Card order: filtered list, then sorted by distance (nearest first) when location is available.
+  // To use list order only, remove the .sort() below. To change order, reorder data/dummyClimbers.ts.
+  const filteredClimbers = useMemo(() => {
+    const list = applyFilter(DUMMY_CLIMBERS, filter);
+    if (userLocation == null) return list;
+    return [...list].sort(
+      (a, b) =>
+        getDistanceKm(userLocation, a.location) - getDistanceKm(userLocation, b.location)
+    );
+  }, [
+    filter.ageMin,
+    filter.ageMax,
+    filter.genderPreferences,
+    filter.climbingTypes,
+    userLocation?.latitude,
+    userLocation?.longitude,
+  ]);
 
   useEffect(() => {
     getCurrentLocation().then((coords) => {
@@ -116,13 +130,13 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#c0ccd1",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#c0ccd1",
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 16,

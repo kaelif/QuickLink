@@ -34,7 +34,7 @@ function MessageBubble({ msg }: { msg: Message }) {
 export default function ChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { matches, getMessages, sendMessage } = useMatches();
+  const { matches, getMessages, sendMessage, isLoading } = useMatches();
   const [input, setInput] = useState("");
   const flatListRef = useRef<FlatList>(null);
 
@@ -42,22 +42,21 @@ export default function ChatScreen() {
   const messages = id ? getMessages(id) : [];
 
   useEffect(() => {
-    if (id && !match) {
+    if (!isLoading && id && !match) {
       router.replace("/messages");
     }
-  }, [id, match, router]);
+  }, [isLoading, id, match, router]);
 
   const handleSend = useCallback(() => {
+    if (!match) return;
     const text = input.trim();
     if (!text || !id) return;
     sendMessage(id, text);
     setInput("");
     setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
-  }, [input, id, sendMessage]);
+  }, [match, input, id, sendMessage]);
 
-  if (!match) {
-    return null;
-  }
+  if (!match) return null;
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>

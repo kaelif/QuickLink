@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import { useMemo, useEffect, useState } from "react";
+import { Image } from "expo-image";
 import {
   ActivityIndicator,
   Pressable,
@@ -54,6 +55,11 @@ export default function Index() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loading}>
+          <Image
+            source={require("../assets/images/splash-icon.png")}
+            style={styles.loadingLogo}
+            contentFit="contain"
+          />
           <ActivityIndicator size="large" color="#1a5f7a" />
           <Text style={styles.loadingText}>Getting your location…</Text>
         </View>
@@ -147,6 +153,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 12,
+  },
+  loadingLogo: {
+    width: 240,
+    height: 160,
+    marginBottom: 8,
   },
   loadingText: {
     fontSize: 15,

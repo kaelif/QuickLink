@@ -34,10 +34,11 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
       AsyncStorage.getItem(MESSAGES_KEY),
     ])
       .then(([matchesRaw, messagesRaw]) => {
+        let loadedMatches: ClimberProfile[] = [];
         if (matchesRaw) {
           try {
-            const parsed = JSON.parse(matchesRaw) as ClimberProfile[];
-            setMatches(parsed);
+            loadedMatches = JSON.parse(matchesRaw) as ClimberProfile[];
+            setMatches(loadedMatches);
           } catch {
             // keep default
           }
@@ -45,7 +46,12 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
         if (messagesRaw) {
           try {
             const parsed = JSON.parse(messagesRaw) as Record<string, Message[]>;
-            setMessages(parsed);
+            const matchIds = new Set(loadedMatches.map((m) => m.id));
+            const messagesForMatchesOnly: Record<string, Message[]> = {};
+            for (const [matchId, list] of Object.entries(parsed)) {
+              if (matchIds.has(matchId)) messagesForMatchesOnly[matchId] = list;
+            }
+            setMessages(messagesForMatchesOnly);
           } catch {
             // keep default
           }

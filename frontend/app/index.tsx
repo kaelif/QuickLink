@@ -1,15 +1,16 @@
-import { useRouter } from "expo-router";
-import { useMemo, useEffect, useState } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
+  useColorScheme,
   View,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SwipeStack } from "../components/SwipeStack";
 import { useFilter } from "../context/FilterContext";
 import { useMatches } from "../context/MatchesContext";
@@ -34,10 +35,15 @@ function applyFilter(climbers: ClimberProfile[], filter: ReturnType<typeof useFi
 }
 
 export default function Index() {
+  const colorScheme = useColorScheme();
   const [userLocation, setUserLocation] = useState<UserCoords | null>(null);
   const [locationLoading, setLocationLoading] = useState(true);
   const { filter } = useFilter();
   const { addMatch } = useMatches();
+  const isDark = colorScheme === "dark";
+  const loadingTextColor = isDark ? "#ffffff" : "#000000";
+  const loadingBgColor = isDark ? "#1a1a1a" : "#e8e8e8";
+  const loadingSpinnerColor = isDark ? "#ffffff" : "#1a5f7a";
 
   const filteredClimbers = useMemo(
     () => applyFilter(DUMMY_CLIMBERS, filter),
@@ -53,15 +59,17 @@ export default function Index() {
 
   if (locationLoading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: loadingBgColor }]}>
         <View style={styles.loading}>
           <Image
             source={require("../assets/images/splash-icon.png")}
             style={styles.loadingLogo}
             contentFit="contain"
           />
-          <ActivityIndicator size="large" color="#1a5f7a" />
-          <Text style={styles.loadingText}>Getting your location…</Text>
+          <ActivityIndicator size="large" color={loadingSpinnerColor} />
+          <Text style={[styles.loadingText, { color: loadingTextColor }]}>
+            Getting your location…
+          </Text>
         </View>
       </SafeAreaView>
     );

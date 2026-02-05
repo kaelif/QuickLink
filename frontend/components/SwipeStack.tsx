@@ -1,5 +1,6 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import { useCallback, useState } from "react";
 import {
   Pressable,
@@ -178,6 +179,11 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
         </Animated.View>
       </GestureDetector>
       </View>
+      <LinearGradient
+        colors={["transparent", "#f5f5f5"]}
+        style={styles.buttonRowFade}
+        pointerEvents="none"
+      />
       <View style={styles.buttonRow} pointerEvents="box-none">
         <Pressable
           style={({ pressed }) => [styles.button, styles.noButton, pressed && styles.buttonPressed]}
@@ -226,6 +232,14 @@ const styles = StyleSheet.create({
   },
   topCard: {
     zIndex: 10,
+  },
+  buttonRowFade: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 140,
+    zIndex: 15,
   },
   buttonRow: {
     position: "absolute",

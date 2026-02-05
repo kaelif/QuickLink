@@ -65,26 +65,31 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
 
   const getMessages = useCallback(
     (matchId: string) => {
+      if (!matches.some((m) => m.id === matchId)) return [];
       return messages[matchId] ?? [];
     },
-    [messages]
+    [messages, matches]
   );
 
-  const sendMessage = useCallback((matchId: string, text: string) => {
-    const msg: Message = {
-      id: `${matchId}-${Date.now()}`,
-      matchId,
-      text: text.trim(),
-      isFromMe: true,
-      createdAt: Date.now(),
-    };
-    setMessages((prev) => {
-      const list = prev[matchId] ?? [];
-      const next = { ...prev, [matchId]: [...list, msg] };
-      AsyncStorage.setItem(MESSAGES_KEY, JSON.stringify(next)).catch(() => {});
-      return next;
-    });
-  }, []);
+  const sendMessage = useCallback(
+    (matchId: string, text: string) => {
+      if (!matches.some((m) => m.id === matchId)) return;
+      const msg: Message = {
+        id: `${matchId}-${Date.now()}`,
+        matchId,
+        text: text.trim(),
+        isFromMe: true,
+        createdAt: Date.now(),
+      };
+      setMessages((prev) => {
+        const list = prev[matchId] ?? [];
+        const next = { ...prev, [matchId]: [...list, msg] };
+        AsyncStorage.setItem(MESSAGES_KEY, JSON.stringify(next)).catch(() => {});
+        return next;
+      });
+    },
+    [matches]
+  );
 
   return (
     <MatchesContext.Provider

@@ -15,7 +15,8 @@ import { SwipeStack } from "../components/SwipeStack";
 import { useFilter } from "../context/FilterContext";
 import { useMatches } from "../context/MatchesContext";
 import { DUMMY_CLIMBERS } from "../data/dummyClimbers";
-import { TESTING } from "../lib/featureFlags";
+import { fetchClimbersFromDb } from "../lib/climbersApi";
+import { TESTING, USE_DUMMY_DATA } from "../lib/featureFlags";
 import { getDistanceKm } from "../lib/geo";
 import { getCurrentLocation, type UserCoords } from "../lib/location";
 import { BACKGROUND_COLOR } from "../lib/theme";
@@ -41,6 +42,8 @@ export default function Index() {
   const colorScheme = useColorScheme();
   const [userLocation, setUserLocation] = useState<UserCoords | null>(null);
   const [locationLoading, setLocationLoading] = useState(true);
+  const [climbersFromDb, setClimbersFromDb] = useState<ClimberProfile[]>([]);
+  const [climbersLoading, setClimbersLoading] = useState(!USE_DUMMY_DATA);
   const { filter } = useFilter();
   const { matches, removedMatchIds, blockedUserIds, addMatch } = useMatches();
   const isDark = colorScheme === "dark";
@@ -48,16 +51,19 @@ export default function Index() {
   const loadingBgColor = BACKGROUND_COLOR;
   const loadingSpinnerColor = isDark ? "#ffffff" : "#1a5f7a";
 
+  const allClimbers = USE_DUMMY_DATA ? DUMMY_CLIMBERS : climbersFromDb;
+
   // Card order: filtered list, then sorted by distance (nearest first) when location is available.
-  // To use list order only, remove the .sort() below. To change order, reorder data/dummyClimbers.ts.
+  // To use list order only, remove the .sort() below. To change order, reorder data/dummyClimbers.ts (when useDummyData) or DB (when not).
   const filteredClimbers = useMemo(() => {
-    const list = applyFilter(DUMMY_CLIMBERS, filter);
+    const list = applyFilter(allClimbers, filter);
     if (userLocation == null) return list;
     return [...list].sort(
       (a, b) =>
         getDistanceKm(userLocation, a.location) - getDistanceKm(userLocation, b.location)
     );
   }, [
+    allClimbers,
     filter.ageMin,
     filter.ageMax,
     filter.genderPreferences,
@@ -83,7 +89,18 @@ export default function Index() {
     });
   }, []);
 
-  if (locationLoading) {
+  useEffect(() => {
+    if (!USE_DUMMY_DATA) {
+      setClimbersLoading(true);
+      fetchClimbersFromDb()
+        .then(setClimbersFromDb)
+        .finally(() => setClimbersLoading(false));
+    }
+  }, []);
+
+  const isLoading = locationLoading || (!USE_DUMMY_DATA && climbersLoading);
+
+  if (isLoading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: loadingBgColor }]}>
         <View style={styles.loading}>

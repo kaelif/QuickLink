@@ -1,10 +1,12 @@
--- QuickLink seed: dummy climbers (well-known climbers, 4–5 Commons photos each)
+-- QuickLink seed: dummy climbers (idempotent)
 -- Run after 01_schema.sql in Supabase Dashboard → SQL Editor.
+-- Safe to run multiple times: only inserts new rows; existing rows (by seed_id) are updated, not duplicated.
 -- Every photo is of the actual famous climber named. Matches frontend/data/dummyClimbers.ts.
 
 set search_path to public;
 
 insert into public.climbers (
+  seed_id,
   first_name,
   age,
   latitude,
@@ -14,6 +16,7 @@ insert into public.climbers (
   photo_urls
 ) values
 (
+  'quicklink-seed-1',
   'Alex',
   31,
   37.7749,
@@ -29,6 +32,7 @@ insert into public.climbers (
   ]
 ),
 (
+  'quicklink-seed-2',
   'Adam',
   32,
   40.01499,
@@ -44,6 +48,7 @@ insert into public.climbers (
   ]
 ),
 (
+  'quicklink-seed-3',
   'Janja',
   26,
   37.7749,
@@ -59,6 +64,7 @@ insert into public.climbers (
   ]
 ),
 (
+  'quicklink-seed-4',
   'Chris',
   44,
   37.7755,
@@ -74,6 +80,7 @@ insert into public.climbers (
   ]
 ),
 (
+  'quicklink-seed-5',
   'Alex',
   40,
   40.015,
@@ -89,6 +96,7 @@ insert into public.climbers (
   ]
 ),
 (
+  'quicklink-seed-6',
   'Nathaniel',
   28,
   40.01499,
@@ -104,6 +112,7 @@ insert into public.climbers (
   ]
 ),
 (
+  'quicklink-seed-7',
   'Tomoa',
   29,
   37.7749,
@@ -117,4 +126,13 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/960px-Tomoa_Narasaki_JPN_1868.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tomoa_Narasaki_%28cropped%29.jpg/600px-Tomoa_Narasaki_%28cropped%29.jpg'
   ]
-);
+)
+on conflict (seed_id) do update set
+  first_name = excluded.first_name,
+  age = excluded.age,
+  latitude = excluded.latitude,
+  longitude = excluded.longitude,
+  climbing_types = excluded.climbing_types,
+  bio = excluded.bio,
+  photo_urls = excluded.photo_urls,
+  updated_at = now();

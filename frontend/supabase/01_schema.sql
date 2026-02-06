@@ -1,5 +1,5 @@
--- QuickLink Supabase schema
--- Run this in Supabase Dashboard → SQL Editor before 02_seed_climbers.sql
+-- QuickLink Supabase schema (idempotent)
+-- Run in Supabase Dashboard → SQL Editor. Safe to run multiple times.
 -- Creates tables for climbers (discovery feed) and user_profiles (edit-profile data).
 
 -- Climbers: profiles shown in the swipe stack (dummy/real climbers).
@@ -22,9 +22,16 @@ comment on table public.climbers is 'Climber profiles for the discovery/swipe fe
 comment on column public.climbers.climbing_types is 'Allowed: sport, bouldering, trad.';
 comment on column public.climbers.photo_urls is 'Array of image URLs for the profile.';
 
--- Optional: enable RLS and allow public read for unauthenticated discovery.
+-- Optional: unique seed_id for idempotent seed scripts (no duplicate rows on re-run).
+alter table public.climbers
+  add column if not exists seed_id text unique;
+
+comment on column public.climbers.seed_id is 'Set by seed script; used for ON CONFLICT so seed can be run repeatedly without duplicates.';
+
+-- RLS: drop and recreate so script is idempotent.
 alter table public.climbers enable row level security;
 
+drop policy if exists "Climbers are viewable by everyone" on public.climbers;
 create policy "Climbers are viewable by everyone"
   on public.climbers for select
   using (true);
@@ -56,7 +63,10 @@ comment on column public.user_profiles.gender_preferences is 'Who to show: woman
 
 alter table public.user_profiles enable row level security;
 
--- Policy: allow all for now (no auth). When you add auth, restrict to auth.uid() = id.
+drop policy if exists "User profiles are readable by everyone" on public.user_profiles;
+drop policy if exists "User profiles are insertable by everyone" on public.user_profiles;
+drop policy if exists "User profiles are updatable by everyone" on public.user_profiles;
+
 create policy "User profiles are readable by everyone"
   on public.user_profiles for select using (true);
 create policy "User profiles are insertable by everyone"
@@ -64,7 +74,7 @@ create policy "User profiles are insertable by everyone"
 create policy "User profiles are updatable by everyone"
   on public.user_profiles for update using (true);
 
--- Updated_at trigger helper (optional).
+-- Updated_at trigger helper (idempotent).
 create or replace function public.set_updated_at()
 returns trigger as $$
 begin
@@ -73,10 +83,12 @@ begin
 end;
 $$ language plpgsql;
 
+drop trigger if exists climbers_updated_at on public.climbers;
 create trigger climbers_updated_at
   before update on public.climbers
   for each row execute function public.set_updated_at();
 
+drop trigger if exists user_profiles_updated_at on public.user_profiles;
 create trigger user_profiles_updated_at
   before update on public.user_profiles
   for each row execute function public.set_updated_at();

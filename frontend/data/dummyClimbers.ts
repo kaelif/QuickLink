@@ -11,14 +11,15 @@ const W = "https://upload.wikimedia.org/wikipedia/commons";
 export const DUMMY_CLIMBERS: ClimberProfile[] = [
   {
     id: "1",
-    firstName: "Alex",
-    age: 31,
+    firstName: "Tomoa",
+    age: 29,
     gender: "man",
     location: { latitude: 37.7749, longitude: -122.4194 },
-    climbingTypes: ["sport", "bouldering"],
-    bio: "Sport and bouldering. Always down to try hard projects or just have a good session. Looking for reliable partners who want to push grades.",
+    climbingTypes: ["bouldering"],
+    bio: "Bouldering and competition. Love hard boulders and trying new problems. Looking for partners to session with and share beta.",
     photoUrls: [
-      `${W}/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/600px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG`,
+      `${W}/9/94/Tomoa_Narasaki_JPN_1868.jpg`,
+      `${W}/thumb/5/5a/Tomoa_Narasaki_%28cropped%29.jpg/600px-Tomoa_Narasaki_%28cropped%29.jpg`,
     ],
   },
   {
@@ -92,19 +93,6 @@ export const DUMMY_CLIMBERS: ClimberProfile[] = [
     bio: "Bouldering. Love sessioning projects and exploring new boulder fields. V15–V17 range. Down for long days or quick evening sessions.",
     photoUrls: [
       `${W}/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/600px-Nathaniel_Coleman_%28USA%29_2019.jpg`,
-    ],
-  },
-  {
-    id: "7",
-    firstName: "Tomoa",
-    age: 29,
-    gender: "man",
-    location: { latitude: 37.7749, longitude: -122.4194 },
-    climbingTypes: ["bouldering"],
-    bio: "Bouldering and competition. Love hard boulders and trying new problems. Looking for partners to session with and share beta.",
-    photoUrls: [
-      `${W}/9/94/Tomoa_Narasaki_JPN_1868.jpg`,
-      `${W}/thumb/5/5a/Tomoa_Narasaki_%28cropped%29.jpg/600px-Tomoa_Narasaki_%28cropped%29.jpg`,
     ],
   },
 ];

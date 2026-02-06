@@ -1,9 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { TESTING } from "../lib/featureFlags";
 import type { ClimberProfile } from "../types/climber";
 
 const MATCHES_KEY = "@QuickLink/matches";
 const MESSAGES_KEY = "@QuickLink/messages";
+const REMOVED_MATCH_IDS_KEY = "@QuickLink/removedMatchIds";
 
 export interface Message {
   id: string;
@@ -15,7 +17,10 @@ export interface Message {
 
 interface MatchesContextValue {
   matches: ClimberProfile[];
+  /** IDs of users the current user has removed as matches. When TESTING is false, these stay out of the stack. */
+  removedMatchIds: string[];
   addMatch: (climber: ClimberProfile) => void;
+  removeMatch: (matchId: string) => void;
   getMessages: (matchId: string) => Message[];
   sendMessage: (matchId: string, text: string) => void;
   isLoading: boolean;
@@ -23,17 +28,21 @@ interface MatchesContextValue {
 
 const MatchesContext = createContext<MatchesContextValue | null>(null);
 
+
+
 export function MatchesProvider({ children }: { children: React.ReactNode }) {
   const [matches, setMatches] = useState<ClimberProfile[]>([]);
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
+  const [removedMatchIds, setRemovedMatchIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       AsyncStorage.getItem(MATCHES_KEY),
       AsyncStorage.getItem(MESSAGES_KEY),
+      AsyncStorage.getItem(REMOVED_MATCH_IDS_KEY),
     ])
-      .then(([matchesRaw, messagesRaw]) => {
+      .then(([matchesRaw, messagesRaw, removedRaw]) => {
         let loadedMatches: ClimberProfile[] = [];
         if (matchesRaw) {
           try {
@@ -56,6 +65,14 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
             // keep default
           }
         }
+        if (removedRaw) {
+          try {
+            const parsed = JSON.parse(removedRaw) as string[];
+            setRemovedMatchIds(Array.isArray(parsed) ? parsed : []);
+          } catch {
+            // keep default
+          }
+        }
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -67,6 +84,28 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
       AsyncStorage.setItem(MATCHES_KEY, JSON.stringify(next)).catch(() => {});
       return next;
     });
+  }, []);
+
+  const removeMatch = useCallback((matchId: string) => {
+    setMatches((prev) => {
+      const next = prev.filter((m) => m.id !== matchId);
+      AsyncStorage.setItem(MATCHES_KEY, JSON.stringify(next)).catch(() => {});
+      return next;
+    });
+    setMessages((prev) => {
+      const next = { ...prev };
+      delete next[matchId];
+      AsyncStorage.setItem(MESSAGES_KEY, JSON.stringify(next)).catch(() => {});
+      return next;
+    });
+    if (!TESTING) {
+      setRemovedMatchIds((prev) => {
+        if (prev.includes(matchId)) return prev;
+        const next = [...prev, matchId];
+        AsyncStorage.setItem(REMOVED_MATCH_IDS_KEY, JSON.stringify(next)).catch(() => {});
+        return next;
+      });
+    }
   }, []);
 
   const getMessages = useCallback(
@@ -99,7 +138,7 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MatchesContext.Provider
-      value={{ matches, addMatch, getMessages, sendMessage, isLoading }}
+      value={{ matches, removedMatchIds, addMatch, removeMatch, getMessages, sendMessage, isLoading }}
     >
       {children}
     </MatchesContext.Provider>

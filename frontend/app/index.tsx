@@ -15,6 +15,7 @@ import { SwipeStack } from "../components/SwipeStack";
 import { useFilter } from "../context/FilterContext";
 import { useMatches } from "../context/MatchesContext";
 import { DUMMY_CLIMBERS } from "../data/dummyClimbers";
+import { TESTING } from "../lib/featureFlags";
 import { getDistanceKm } from "../lib/geo";
 import { getCurrentLocation, type UserCoords } from "../lib/location";
 import { BACKGROUND_COLOR } from "../lib/theme";
@@ -41,7 +42,7 @@ export default function Index() {
   const [userLocation, setUserLocation] = useState<UserCoords | null>(null);
   const [locationLoading, setLocationLoading] = useState(true);
   const { filter } = useFilter();
-  const { addMatch } = useMatches();
+  const { matches, removedMatchIds, addMatch } = useMatches();
   const isDark = colorScheme === "dark";
   const loadingTextColor = isDark ? "#ffffff" : "#000000";
   const loadingBgColor = BACKGROUND_COLOR;
@@ -64,6 +65,15 @@ export default function Index() {
     userLocation?.latitude,
     userLocation?.longitude,
   ]);
+
+  // Exclude current matches from the stack. When TESTING is false, also exclude previously removed matches.
+  const stackClimbers = useMemo(() => {
+    const matchIds = new Set(matches.map((m) => m.id));
+    const excludedIds = TESTING
+      ? matchIds
+      : new Set([...matchIds, ...removedMatchIds]);
+    return filteredClimbers.filter((c) => !excludedIds.has(c.id));
+  }, [filteredClimbers, matches, removedMatchIds]);
 
   useEffect(() => {
     getCurrentLocation().then((coords) => {
@@ -123,7 +133,7 @@ export default function Index() {
           </Pressable>
         </View>
       </View>
-      <SwipeStack climbers={filteredClimbers} userLocation={userLocation} onLike={addMatch} />
+      <SwipeStack climbers={stackClimbers} userLocation={userLocation} onLike={addMatch} />
     </SafeAreaView>
   );
 }

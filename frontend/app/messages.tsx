@@ -1,14 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import {
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMatches } from "../context/MatchesContext";
 import { BACKGROUND_COLOR } from "../lib/theme";
@@ -18,38 +20,59 @@ function MatchRow({
   match,
   lastMessage,
   onPress,
+  onRemove,
 }: {
   match: ClimberProfile;
   lastMessage: string | null;
   onPress: () => void;
+  onRemove: () => void;
 }) {
+  const renderRightActions = useCallback(
+    () => (
+      <Pressable
+        onPress={onRemove}
+        style={styles.removeAction}
+        accessibilityLabel="Remove match"
+      >
+        <Text style={styles.removeActionText}>Remove</Text>
+      </Pressable>
+    ),
+    [onRemove]
+  );
+
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+    <Swipeable
+      renderRightActions={renderRightActions}
+      friction={2}
+      rightThreshold={40}
     >
-      <View style={styles.avatarWrap}>
-        <Image
-          source={{ uri: match.photoUrls[0] }}
-          style={styles.avatar}
-          contentFit="cover"
-        />
-      </View>
-      <View style={styles.rowContent}>
-        <Text style={styles.name}>
-          {match.firstName}, {match.age}
-        </Text>
-        {lastMessage ? (
-          <Text style={styles.preview} numberOfLines={1}>
-            {lastMessage}
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+      >
+        <View style={styles.avatarWrap}>
+          <Image
+            source={{ uri: match.photoUrls[0] }}
+            style={styles.avatar}
+            contentFit="cover"
+          />
+        </View>
+        <View style={styles.rowContent}>
+          <Text style={styles.name}>
+            {match.firstName}, {match.age}
           </Text>
-        ) : (
-          <Text style={styles.previewMuted} numberOfLines={1}>
-            Start a conversation
-          </Text>
-        )}
-      </View>
-    </Pressable>
+          {lastMessage ? (
+            <Text style={styles.preview} numberOfLines={1}>
+              {lastMessage}
+            </Text>
+          ) : (
+            <Text style={styles.previewMuted} numberOfLines={1}>
+              Start a conversation
+            </Text>
+          )}
+        </View>
+      </Pressable>
+    </Swipeable>
   );
 }
 
@@ -81,7 +104,7 @@ function MatchAvatar({
 
 export default function MessagesScreen() {
   const router = useRouter();
-  const { matches, getMessages } = useMatches();
+  const { matches, getMessages, removeMatch } = useMatches();
 
   const newMatches = useMemo(
     () => matches.filter((m) => getMessages(m.id).length === 0),
@@ -168,6 +191,20 @@ export default function MessagesScreen() {
                     match={match}
                     lastMessage={lastText}
                     onPress={() => router.push(`/chat/${match.id}`)}
+                    onRemove={() => {
+                      Alert.alert(
+                        "Remove match",
+                        `Remove ${match.firstName} from your matches? This will delete the conversation.`,
+                        [
+                          { text: "Cancel", style: "cancel" },
+                          {
+                            text: "Remove",
+                            style: "destructive",
+                            onPress: () => removeMatch(match.id),
+                          },
+                        ]
+                      );
+                    }}
                   />
                 );
               })}
@@ -286,6 +323,18 @@ const styles = StyleSheet.create({
   conversationsEmptyText: {
     fontSize: 15,
     textAlign: "center",
+  },
+  removeAction: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#c62828",
+    width: 88,
+    paddingHorizontal: 16,
+  },
+  removeActionText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fff",
   },
   row: {
     flexDirection: "row",

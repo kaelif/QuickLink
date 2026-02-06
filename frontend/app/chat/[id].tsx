@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  Alert,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -36,7 +37,7 @@ function MessageBubble({ msg }: { msg: Message }) {
 export default function ChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { matches, getMessages, sendMessage, isLoading } = useMatches();
+  const { matches, getMessages, removeMatch, sendMessage, isLoading } = useMatches();
   const [input, setInput] = useState("");
   const flatListRef = useRef<FlatList>(null);
 
@@ -58,6 +59,25 @@ export default function ChatScreen() {
     setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
   }, [match, input, id, sendMessage]);
 
+  const handleRemoveMatch = useCallback(() => {
+    if (!id) return;
+    Alert.alert(
+      "Remove match",
+      `Remove ${match?.firstName} from your matches? This will delete the conversation.`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Remove",
+          style: "destructive",
+          onPress: () => {
+            removeMatch(id);
+            router.replace("/messages");
+          },
+        },
+      ]
+    );
+  }, [id, match?.firstName, removeMatch, router]);
+
   if (!match) return null;
 
   return (
@@ -70,7 +90,13 @@ export default function ChatScreen() {
         <Text style={styles.headerTitle}>
           {match.firstName}, {match.age}
         </Text>
-        <View style={styles.backBtnSpacer} />
+        <Pressable
+          onPress={handleRemoveMatch}
+          style={styles.menuBtn}
+          accessibilityLabel="Conversation options"
+        >
+          <Ionicons name="ellipsis-horizontal" size={22} color="#1a5f7a" />
+        </Pressable>
       </View>
       <KeyboardAvoidingView
         style={styles.flex}
@@ -156,6 +182,17 @@ const styles = StyleSheet.create({
   backBtnSpacer: {
     padding: 8,
     minWidth: 60,
+  },
+  menuBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 8,
+    minWidth: 44,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "#1a5f7a",
+    backgroundColor: BACKGROUND_COLOR,
+    borderRadius: 8,
   },
   backText: {
     fontSize: 16,

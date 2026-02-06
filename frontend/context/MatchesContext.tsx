@@ -6,6 +6,7 @@ import type { ClimberProfile } from "../types/climber";
 const MATCHES_KEY = "@QuickLink/matches";
 const MESSAGES_KEY = "@QuickLink/messages";
 const REMOVED_MATCH_IDS_KEY = "@QuickLink/removedMatchIds";
+const BLOCKED_USER_IDS_KEY = "@QuickLink/blockedUserIds";
 
 export interface Message {
   id: string;
@@ -19,8 +20,11 @@ interface MatchesContextValue {
   matches: ClimberProfile[];
   /** IDs of users the current user has removed as matches. When TESTING is false, these stay out of the stack. */
   removedMatchIds: string[];
+  /** IDs of users the current user has blocked. Blocked users never appear in the stack. */
+  blockedUserIds: string[];
   addMatch: (climber: ClimberProfile) => void;
   removeMatch: (matchId: string) => void;
+  blockUser: (matchId: string) => void;
   getMessages: (matchId: string) => Message[];
   sendMessage: (matchId: string, text: string) => void;
   isLoading: boolean;
@@ -34,6 +38,7 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
   const [matches, setMatches] = useState<ClimberProfile[]>([]);
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [removedMatchIds, setRemovedMatchIds] = useState<string[]>([]);
+  const [blockedUserIds, setBlockedUserIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -41,8 +46,9 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
       AsyncStorage.getItem(MATCHES_KEY),
       AsyncStorage.getItem(MESSAGES_KEY),
       AsyncStorage.getItem(REMOVED_MATCH_IDS_KEY),
+      AsyncStorage.getItem(BLOCKED_USER_IDS_KEY),
     ])
-      .then(([matchesRaw, messagesRaw, removedRaw]) => {
+      .then(([matchesRaw, messagesRaw, removedRaw, blockedRaw]) => {
         let loadedMatches: ClimberProfile[] = [];
         if (matchesRaw) {
           try {
@@ -73,6 +79,14 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
             // keep default
           }
         }
+        if (blockedRaw) {
+          try {
+            const parsed = JSON.parse(blockedRaw) as string[];
+            setBlockedUserIds(Array.isArray(parsed) ? parsed : []);
+          } catch {
+            // keep default
+          }
+        }
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -87,6 +101,34 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const removeMatch = useCallback((matchId: string) => {
+    setMatches((prev) => {
+      const next = prev.filter((m) => m.id !== matchId);
+      AsyncStorage.setItem(MATCHES_KEY, JSON.stringify(next)).catch(() => {});
+      return next;
+    });
+    setMessages((prev) => {
+      const next = { ...prev };
+      delete next[matchId];
+      AsyncStorage.setItem(MESSAGES_KEY, JSON.stringify(next)).catch(() => {});
+      return next;
+    });
+    if (!TESTING) {
+      setRemovedMatchIds((prev) => {
+        if (prev.includes(matchId)) return prev;
+        const next = [...prev, matchId];
+        AsyncStorage.setItem(REMOVED_MATCH_IDS_KEY, JSON.stringify(next)).catch(() => {});
+        return next;
+      });
+    }
+  }, []);
+
+  const blockUser = useCallback((matchId: string) => {
+    setBlockedUserIds((prev) => {
+      if (prev.includes(matchId)) return prev;
+      const next = [...prev, matchId];
+      AsyncStorage.setItem(BLOCKED_USER_IDS_KEY, JSON.stringify(next)).catch(() => {});
+      return next;
+    });
     setMatches((prev) => {
       const next = prev.filter((m) => m.id !== matchId);
       AsyncStorage.setItem(MATCHES_KEY, JSON.stringify(next)).catch(() => {});
@@ -138,7 +180,7 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MatchesContext.Provider
-      value={{ matches, removedMatchIds, addMatch, removeMatch, getMessages, sendMessage, isLoading }}
+      value={{ matches, removedMatchIds, blockedUserIds, addMatch, removeMatch, blockUser, getMessages, sendMessage, isLoading }}
     >
       {children}
     </MatchesContext.Provider>

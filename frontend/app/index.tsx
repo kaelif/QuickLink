@@ -42,7 +42,7 @@ export default function Index() {
   const [userLocation, setUserLocation] = useState<UserCoords | null>(null);
   const [locationLoading, setLocationLoading] = useState(true);
   const { filter } = useFilter();
-  const { matches, removedMatchIds, addMatch } = useMatches();
+  const { matches, removedMatchIds, blockedUserIds, addMatch } = useMatches();
   const isDark = colorScheme === "dark";
   const loadingTextColor = isDark ? "#ffffff" : "#000000";
   const loadingBgColor = BACKGROUND_COLOR;
@@ -66,14 +66,15 @@ export default function Index() {
     userLocation?.longitude,
   ]);
 
-  // Exclude current matches from the stack. When TESTING is false, also exclude previously removed matches.
+  // Exclude current matches and blocked users from the stack. When TESTING is false, also exclude previously removed matches.
   const stackClimbers = useMemo(() => {
     const matchIds = new Set(matches.map((m) => m.id));
+    const blockedSet = new Set(blockedUserIds);
     const excludedIds = TESTING
-      ? matchIds
-      : new Set([...matchIds, ...removedMatchIds]);
+      ? new Set([...matchIds, ...blockedSet])
+      : new Set([...matchIds, ...removedMatchIds, ...blockedSet]);
     return filteredClimbers.filter((c) => !excludedIds.has(c.id));
-  }, [filteredClimbers, matches, removedMatchIds]);
+  }, [filteredClimbers, matches, removedMatchIds, blockedUserIds]);
 
   useEffect(() => {
     getCurrentLocation().then((coords) => {

@@ -37,7 +37,7 @@ function MessageBubble({ msg }: { msg: Message }) {
 export default function ChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { matches, getMessages, removeMatch, sendMessage, isLoading } = useMatches();
+  const { matches, getMessages, removeMatch, blockUser, sendMessage, isLoading } = useMatches();
   const [input, setInput] = useState("");
   const flatListRef = useRef<FlatList>(null);
 
@@ -59,15 +59,15 @@ export default function ChatScreen() {
     setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
   }, [match, input, id, sendMessage]);
 
-  const handleRemoveMatch = useCallback(() => {
+  const handleUnmatch = useCallback(() => {
     if (!id) return;
     Alert.alert(
-      "Remove match",
+      "Unmatch",
       `Remove ${match?.firstName} from your matches? This will delete the conversation.`,
       [
         { text: "Cancel", style: "cancel" },
         {
-          text: "Remove",
+          text: "Unmatch",
           style: "destructive",
           onPress: () => {
             removeMatch(id);
@@ -77,6 +77,34 @@ export default function ChatScreen() {
       ]
     );
   }, [id, match?.firstName, removeMatch, router]);
+
+  const handleBlock = useCallback(() => {
+    if (!id) return;
+    Alert.alert(
+      "Block",
+      `Block ${match?.firstName}? They will be removed from your matches and won't appear in your stack again.`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Block",
+          style: "destructive",
+          onPress: () => {
+            blockUser(id);
+            router.replace("/messages");
+          },
+        },
+      ]
+    );
+  }, [id, match?.firstName, blockUser, router]);
+
+  const handleMenuPress = useCallback(() => {
+    if (!match) return;
+    Alert.alert("Conversation options", "Choose an action", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Unmatch", onPress: handleUnmatch },
+      { text: "Block", onPress: handleBlock, style: "destructive" },
+    ]);
+  }, [match, handleUnmatch, handleBlock]);
 
   if (!match) return null;
 
@@ -91,7 +119,7 @@ export default function ChatScreen() {
           {match.firstName}, {match.age}
         </Text>
         <Pressable
-          onPress={handleRemoveMatch}
+          onPress={handleMenuPress}
           style={styles.menuBtn}
           accessibilityLabel="Conversation options"
         >

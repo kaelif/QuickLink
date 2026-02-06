@@ -7,5 +7,5 @@
  * - testing: when true, users who were removed as matches can appear again in the swipe stack (for testing).
  *   when false, removed matches are excluded from the stack permanently.
  */
-export const USE_DUMMY_DATA = true;
+export const USE_DUMMY_DATA = false;
 export const TESTING = true;

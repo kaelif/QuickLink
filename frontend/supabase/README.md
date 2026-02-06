@@ -23,6 +23,26 @@ All scripts are **idempotent**: safe to run multiple times. They only create tab
 | `public.climbers`      | Discovery feed: climber profiles (first name, age, location, climbing types, bio, photo URLs). Used for the swipe stack. |
 | `public.user_profiles` | App user’s editable profile (bio, photos, gender, climbing types, age/gender preferences). Optional; can be wired to Supabase Auth later. |
 
+## Connecting the app
+
+To load climbers from this database instead of dummy data:
+
+1. **Get your Project URL and anon key**
+   - Open [Supabase Dashboard](https://supabase.com/dashboard) and select your project.
+   - Go to **Project Settings** (gear icon) → **API**.
+   - **Project URL** → use as `EXPO_PUBLIC_SUPABASE_URL` (e.g. `https://YOUR_PROJECT_REF.supabase.co`).
+   - **Project API keys** → copy the **anon** **public** key → use as `EXPO_PUBLIC_SUPABASE_ANON_KEY`.
+   - The anon key is not the same as your database password. Do not put the postgres password in the app.
+
+2. **Create `.env` in the frontend folder**
+   - Copy `.env.example` to `.env`: `cp .env.example .env`
+   - Set `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` in `.env`.
+   - Restart the dev server after changing `.env`.
+
+3. **Use the database in the app**
+   - In `lib/featureFlags.ts`, set `USE_DUMMY_DATA = false`.
+   - The app will then fetch climbers from `public.climbers` via the Supabase client.
+
 ## Using from the app
 
 - **Climbers**: Query `public.climbers` (e.g. with Supabase client `from('climbers').select('*')`). Map DB columns to your app: `first_name` → `firstName`, `photo_urls` → `photoUrls`, `climbing_types` → `climbingTypes`, and `latitude`/`longitude` into a `location` object. The optional `seed_id` column is used only by the seed script for idempotent upserts; you can omit it from app queries or use `id` (uuid) as the primary key.

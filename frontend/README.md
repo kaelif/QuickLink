@@ -1,6 +1,6 @@
 # QuickLink
 
-**Find climbing partners.** A Tinder-style app for rock climbers to discover potential partners. Swipe through profiles, see how far away other climbers are, and view their climbing styles (sport, bouldering, trad) and bios.
+**Find climbing partners.** A Tinder-style **mobile app** for rock climbers to discover potential partners. Swipe through profiles, see how far away other climbers are, and view their climbing styles (sport, bouldering, trad) and bios. iOS and Android only (Expo Go or native build).
 
 ## What it does
 
@@ -15,8 +15,7 @@ The app uses dummy data (well-known climbers with real photos from Wikimedia Com
 ## Prerequisites
 
 - **Node.js** (v18 or newer) and **npm**
-- For **mobile**: the **Expo Go** app on your phone ([iOS](https://apps.apple.com/app/expo-go/id982107779) | [Android](https://play.google.com/store/apps/details?id=host.exp.exponent))
-- Optional: **Xcode** (Mac) for iOS Simulator, or **Android Studio** for Android Emulator
+- **Expo Go** on your phone ([iOS](https://apps.apple.com/app/expo-go/id982107779) | [Android](https://play.google.com/store/apps/details?id=host.exp.exponent)) — or **Xcode** (Mac) for iOS Simulator, or **Android Studio** for Android Emulator
 
 ## First-time setup
 
@@ -27,64 +26,31 @@ cd frontend
 npm install
 ```
 
-### 2. Start the dev server
+### 2. Start the app (mobile)
 
 ```bash
 npm start
 ```
 
-A terminal UI will open. You’ll see a QR code and options to open the app in a browser or in a simulator.
+A terminal UI opens with a QR code and options. The app talks to **Supabase directly** from the device; no backend server is required.
 
----
+- **On your phone:** Install Expo Go, then scan the QR code (iOS Camera or Android Expo Go). Your phone and computer must be on the same Wi‑Fi. If you see “Could not connect to development server,” run **`npm run start:tunnel`** instead.
+- **iOS Simulator (Mac):** Press **`i`** in the terminal after `npm start`.
+- **Android Emulator:** Start the emulator, run `npm start`, then press **`a`** in the terminal.
 
-## Running on desktop (web)
-
-1. Run `npm start`, then press **`w`** in the terminal to open the app in your browser.
-2. Or run:
-
-   ```bash
-   npm run web
-   ```
-
-3. The app will open at a URL like `http://localhost:8081`.  
-   **Note:** Location-based distance may be limited or simulated in the browser.
-
----
-
-## Running on a mobile device (first time)
-
-### Option A: Expo Go (easiest)
-
-1. Install **Expo Go** on your phone from the App Store (iOS) or Play Store (Android).
-2. On your computer, run `npm start` in the project folder.
-3. **iOS**: Open the Camera app and scan the QR code shown in the terminal.  
-   **Android**: Open the Expo Go app and tap “Scan QR code,” then scan the code.
-4. Your phone and computer must be on the same Wi‑Fi network. If it fails, try the “Tunnel” option in the terminal (press `s` to switch connection type).
-5. When the app loads, allow **location** when prompted so distance (“X km away”) works.
-
-### Option B: iOS Simulator (Mac only)
-
-1. Install Xcode from the Mac App Store (includes the iOS Simulator).
-2. Run `npm start`, then press **`i`** in the terminal.
-3. The app opens in the simulator. To simulate location: in the simulator menu, **Features → Location** and choose a preset or custom location.
-
-### Option C: Android Emulator
-
-1. Install [Android Studio](https://developer.android.com/studio) and set up an Android Virtual Device (AVD).
-2. Start the emulator, then run `npm start` and press **`a`** in the terminal.
-3. The app opens in the emulator. You can set a mock location in the emulator’s Extended controls (e.g. “…” menu → Location).
+When the app loads on a device, allow **location** when prompted so distance (“X km away”) works.
 
 ---
 
 ## Scripts
 
-| Command        | Description                    |
-|----------------|--------------------------------|
-| `npm start`    | Start Expo dev server          |
-| `npm run web`  | Start and open in browser      |
-| `npm run ios`  | Start and open iOS simulator   |
-| `npm run android` | Start and open Android emulator |
-| `npm run lint` | Run ESLint                     |
+| Command              | Description                                  |
+|----------------------|----------------------------------------------|
+| `npm start`          | Start Expo (QR code, simulators)             |
+| `npm run start:tunnel` | Start with tunnel (phone on different network) |
+| `npm run ios`        | Start and open iOS simulator                 |
+| `npm run android`    | Start and open Android emulator              |
+| `npm run lint`       | Run ESLint                                   |
 
 ---
 

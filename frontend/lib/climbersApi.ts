@@ -1,18 +1,51 @@
+import { supabase } from "./supabase";
 import type { ClimberProfile } from "../types/climber";
 
+/** Shape of a climbers row from Supabase (snake_case). */
+interface ClimberRow {
+  id: string;
+  first_name: string;
+  age: number;
+  latitude: number;
+  longitude: number;
+  climbing_types: string[];
+  bio: string;
+  photo_urls: string[];
+}
+
+function mapRowToClimberProfile(row: ClimberRow): ClimberProfile {
+  return {
+    id: String(row.id),
+    firstName: row.first_name ?? "",
+    age: row.age ?? 18,
+    location: {
+      latitude: row.latitude ?? 0,
+      longitude: row.longitude ?? 0,
+    },
+    climbingTypes: Array.isArray(row.climbing_types) ? row.climbing_types : [],
+    bio: row.bio ?? "",
+    photoUrls: Array.isArray(row.photo_urls) ? row.photo_urls : [],
+  };
+}
+
 /**
- * Fetches climbers from the database (e.g. Supabase).
+ * Fetches climbers from the database (Supabase).
  * Used when USE_DUMMY_DATA is false.
- *
- * To connect Supabase:
- * 1. Install @supabase/supabase-js and create a client.
- * 2. Query: const { data } = await supabase.from('climbers').select('*').
- * 3. Map each row to ClimberProfile: id (string), firstName <- first_name, age,
- *    location <- { latitude, longitude }, climbingTypes <- climbing_types,
- *    bio, photoUrls <- photo_urls, gender (optional if you add it to the table).
+ * Returns [] if Supabase is not configured or the query fails.
  */
 export async function fetchClimbersFromDb(): Promise<ClimberProfile[]> {
-  // TODO: Wire Supabase client and map rows to ClimberProfile.
-  // Example mapping: { id: row.id, firstName: row.first_name, age: row.age, location: { latitude: row.latitude, longitude: row.longitude }, climbingTypes: row.climbing_types ?? [], bio: row.bio ?? '', photoUrls: row.photo_urls ?? [] }
-  return [];
+  if (!supabase) {
+    return [];
+  }
+  const { data, error } = await supabase
+    .from("climbers")
+    .select("id, first_name, age, latitude, longitude, climbing_types, bio, photo_urls");
+  if (error) {
+    console.warn("fetchClimbersFromDb:", error.message);
+    return [];
+  }
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+  return data.map((row) => mapRowToClimberProfile(row as ClimberRow));
 }

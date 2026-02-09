@@ -1,8 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import { formatDistance } from "../lib/geo";
 import { BACKGROUND_COLOR, backgroundRgba } from "../lib/theme";
 import type { ClimberProfile, ClimbingType } from "../types/climber";
@@ -35,7 +34,7 @@ export function ClimberCard({ climber, distanceKm }: ClimberCardProps) {
           <Image
             source={{ uri: photoUrl }}
             style={styles.image}
-            contentFit="cover"
+            resizeMode="cover"
             onError={() => setImageError(true)}
           />
         )}

@@ -10,6 +10,6 @@
  * - circulateCards: when true AND testing is true, left-swiped (passed) users go back into the stack.
  *   Use for certain test cases. When false (or when testing is false), passed users stay out of the stack.
  */
-export const USE_DUMMY_DATA = true;
+export const USE_DUMMY_DATA = false;
 export const TESTING = true;
 export const CIRCULATE_CARDS = true;

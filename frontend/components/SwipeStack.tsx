@@ -34,9 +34,11 @@ interface SwipeStackProps {
   climbers: ClimberProfile[];
   userLocation: UserCoords | null;
   onLike?: (climber: ClimberProfile) => void;
+  /** When true, left-swiped (passed) climbers move to the bottom of the stack instead of being removed. */
+  circulatePassedCards?: boolean;
 }
 
-export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: SwipeStackProps) {
+export function SwipeStack({ climbers: initialClimbers, userLocation, onLike, circulatePassedCards }: SwipeStackProps) {
   const [climbers, setClimbers] = useState(initialClimbers);
   const [selectedClimber, setSelectedClimber] = useState<ClimberProfile | null>(null);
   const { width: screenWidth } = useWindowDimensions();
@@ -52,10 +54,14 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
 
   const triggerPass = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setClimbers((prev) => prev.slice(1));
+    setClimbers((prev) => {
+      if (prev.length <= 1) return prev.slice(1);
+      if (circulatePassedCards) return [...prev.slice(1), prev[0]];
+      return prev.slice(1);
+    });
     translateX.value = 0;
     translateY.value = 0;
-  }, [translateX, translateY]);
+  }, [translateX, translateY, circulatePassedCards]);
 
   const triggerLike = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);

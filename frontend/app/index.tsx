@@ -17,7 +17,7 @@ import { useFilter } from "../context/FilterContext";
 import { useMatches } from "../context/MatchesContext";
 import { DUMMY_CLIMBERS } from "../data/dummyClimbers";
 import { fetchClimbersFromDb } from "../lib/climbersApi";
-import { TESTING, USE_DUMMY_DATA } from "../lib/featureFlags";
+import { CIRCULATE_CARDS, TESTING, USE_DUMMY_DATA } from "../lib/featureFlags";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { getDistanceKm } from "../lib/geo";
 import { getCurrentLocation, type UserCoords } from "../lib/location";
@@ -75,13 +75,14 @@ export default function Index() {
     userLocation?.longitude,
   ]);
 
-  // Exclude current matches and blocked users from the stack. When TESTING is false, also exclude previously removed matches.
+  // Exclude current matches and blocked users. Exclude left-swiped (removed) users unless TESTING && CIRCULATE_CARDS.
   const stackClimbers = useMemo(() => {
     const matchIds = new Set(matches.map((m) => m.id));
     const blockedSet = new Set(blockedUserIds);
-    const excludedIds = TESTING
-      ? new Set([...matchIds, ...blockedSet])
-      : new Set([...matchIds, ...removedMatchIds, ...blockedSet]);
+    const excludeRemoved = !(TESTING && CIRCULATE_CARDS);
+    const excludedIds = excludeRemoved
+      ? new Set([...matchIds, ...removedMatchIds, ...blockedSet])
+      : new Set([...matchIds, ...blockedSet]);
     return filteredClimbers.filter((c) => !excludedIds.has(c.id));
   }, [filteredClimbers, matches, removedMatchIds, blockedUserIds]);
 
@@ -207,7 +208,13 @@ export default function Index() {
           )}
         </View>
       </View>
-      <SwipeStack key={stackKey} climbers={stackClimbers} userLocation={userLocation} onLike={addMatch} />
+      <SwipeStack
+        key={stackKey}
+        climbers={stackClimbers}
+        userLocation={userLocation}
+        onLike={addMatch}
+        circulatePassedCards={TESTING && CIRCULATE_CARDS}
+      />
     </SafeAreaView>
   );
 }

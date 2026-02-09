@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { TESTING } from "../lib/featureFlags";
+import { CIRCULATE_CARDS, TESTING } from "../lib/featureFlags";
 import type { ClimberProfile } from "../types/climber";
 
 const MATCHES_KEY = "@QuickLink/matches";
@@ -18,7 +18,7 @@ export interface Message {
 
 interface MatchesContextValue {
   matches: ClimberProfile[];
-  /** IDs of users the current user has removed as matches. When TESTING is false, these stay out of the stack. */
+  /** IDs of users the current user has removed as matches. When TESTING && CIRCULATE_CARDS is false, these stay out of the stack. */
   removedMatchIds: string[];
   /** IDs of users the current user has blocked. Blocked users never appear in the stack. */
   blockedUserIds: string[];
@@ -114,7 +114,7 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
       AsyncStorage.setItem(MESSAGES_KEY, JSON.stringify(next)).catch(() => {});
       return next;
     });
-    if (!TESTING) {
+    if (!(TESTING && CIRCULATE_CARDS)) {
       setRemovedMatchIds((prev) => {
         if (prev.includes(matchId)) return prev;
         const next = [...prev, matchId];
@@ -142,7 +142,7 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
       AsyncStorage.setItem(MESSAGES_KEY, JSON.stringify(next)).catch(() => {});
       return next;
     });
-    if (!TESTING) {
+    if (!(TESTING && CIRCULATE_CARDS)) {
       setRemovedMatchIds((prev) => {
         if (prev.includes(matchId)) return prev;
         const next = [...prev, matchId];

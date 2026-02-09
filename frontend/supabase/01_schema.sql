@@ -1,6 +1,7 @@
 -- QuickLink Supabase schema (idempotent)
 -- Run in Supabase Dashboard → SQL Editor. Safe to run multiple times.
--- Creates tables for climbers (discovery feed) and user_profiles (edit-profile data).
+-- Uses: create table if not exists, add column if not exists, drop policy/trigger if exists
+-- then create, create or replace function. No duplicates or errors on re-run.
 
 -- Climbers: profiles shown in the swipe stack (dummy/real climbers).
 create table if not exists public.climbers (
@@ -35,6 +36,29 @@ drop policy if exists "Climbers are viewable by everyone" on public.climbers;
 create policy "Climbers are viewable by everyone"
   on public.climbers for select
   using (true);
+
+-- User likes (swipe right): who each climber has swiped right on. A match = mutual like (A liked B and B liked A).
+create table if not exists public.user_likes (
+  swiper_id uuid not null references public.climbers(id) on delete cascade,
+  liked_id uuid not null references public.climbers(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (swiper_id, liked_id),
+  check (swiper_id != liked_id)
+);
+
+comment on table public.user_likes is 'Right swipes: swiper_id has swiped right on liked_id. Match when (A,B) and (B,A) both exist.';
+
+alter table public.user_likes enable row level security;
+
+drop policy if exists "User likes are viewable by everyone" on public.user_likes;
+create policy "User likes are viewable by everyone"
+  on public.user_likes for select using (true);
+drop policy if exists "User likes are insertable by everyone" on public.user_likes;
+create policy "User likes are insertable by everyone"
+  on public.user_likes for insert with check (true);
+drop policy if exists "User likes are deletable by everyone" on public.user_likes;
+create policy "User likes are deletable by everyone"
+  on public.user_likes for delete using (true);
 
 -- User profiles: app user's own editable profile (can be linked to auth.users later).
 create table if not exists public.user_profiles (

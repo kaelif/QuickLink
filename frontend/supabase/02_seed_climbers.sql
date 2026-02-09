@@ -1,11 +1,46 @@
--- QuickLink seed: dummy climbers (idempotent)
+-- QuickLink seed: dummy climbers + main user + user_likes (idempotent)
 -- Run after 01_schema.sql in Supabase Dashboard → SQL Editor.
--- Safe to run multiple times: only inserts new rows; existing rows (by seed_id) are updated, not duplicated.
--- Every photo is of the actual famous climber named where Commons images exist.
--- Brooke Raboutou and Natalia Grossman use No-Image-Placeholder until CC-licensed Commons photos are found; replace photo_urls when available.
+-- Safe to run multiple times:
+--   Climbers: ON CONFLICT (seed_id) DO UPDATE — no duplicate climbers; existing rows updated.
+--   user_likes: ON CONFLICT (swiper_id, liked_id) DO NOTHING — no duplicate like rows.
+-- Main user: seed_id = 'main-user'. user_likes: half of climbers (seed-1..5) have liked main user for testing.
 
 set search_path to public;
 
+-- 1) Main user (the app user on your phone). Insert first so we can reference in user_likes.
+insert into public.climbers (
+  seed_id,
+  first_name,
+  age,
+  latitude,
+  longitude,
+  climbing_types,
+  bio,
+  photo_urls
+) values (
+  'main-user',
+  'Main User',
+  30,
+  37.7749,
+  -122.4194,
+  array['sport', 'bouldering'],
+  'You — the app user. Matches only when you and the other climber have both swiped right.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/400px-No-Image-Placeholder.svg.png',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/600px-No-Image-Placeholder.svg.png'
+  ]
+)
+on conflict (seed_id) do update set
+  first_name = excluded.first_name,
+  age = excluded.age,
+  latitude = excluded.latitude,
+  longitude = excluded.longitude,
+  climbing_types = excluded.climbing_types,
+  bio = excluded.bio,
+  photo_urls = excluded.photo_urls,
+  updated_at = now();
+
+-- 2) Other climbers (discovery feed).
 insert into public.climbers (
   seed_id,
   first_name,
@@ -180,3 +215,59 @@ on conflict (seed_id) do update set
   bio = excluded.bio,
   photo_urls = excluded.photo_urls,
   updated_at = now();
+
+-- 3) user_likes: who has swiped right on whom. Half of climbers (seed-1..5) have liked the main user for testing.
+--    When main user swipes right on seed-1..5, it will be a mutual like (match). Seed-6..10 have not liked main user yet.
+insert into public.user_likes (swiper_id, liked_id)
+select c.id, m.id
+from public.climbers c
+cross join (select id from public.climbers where seed_id = 'main-user') m
+where c.seed_id != 'main-user'
+  and c.seed_id in (
+    'quicklink-seed-1', 'quicklink-seed-2', 'quicklink-seed-3',
+    'quicklink-seed-4', 'quicklink-seed-5'
+  )
+on conflict (swiper_id, liked_id) do nothing;
+
+-- 4) Optional: some likes between other climbers so each has a list (for realism).
+insert into public.user_likes (swiper_id, liked_id)
+select c1.id, c2.id
+from public.climbers c1
+join public.climbers c2 on c2.seed_id in ('quicklink-seed-2', 'quicklink-seed-3') and c1.seed_id = 'quicklink-seed-1'
+union all
+select c1.id, c2.id
+from public.climbers c1
+join public.climbers c2 on c2.seed_id in ('quicklink-seed-1', 'quicklink-seed-4') and c1.seed_id = 'quicklink-seed-2'
+union all
+select c1.id, c2.id
+from public.climbers c1
+join public.climbers c2 on c2.seed_id in ('quicklink-seed-1', 'quicklink-seed-5') and c1.seed_id = 'quicklink-seed-3'
+union all
+select c1.id, c2.id
+from public.climbers c1
+join public.climbers c2 on c2.seed_id in ('quicklink-seed-2', 'quicklink-seed-6') and c1.seed_id = 'quicklink-seed-4'
+union all
+select c1.id, c2.id
+from public.climbers c1
+join public.climbers c2 on c2.seed_id in ('quicklink-seed-3', 'quicklink-seed-7') and c1.seed_id = 'quicklink-seed-5'
+union all
+select c1.id, c2.id
+from public.climbers c1
+join public.climbers c2 on c2.seed_id in ('quicklink-seed-4', 'quicklink-seed-8') and c1.seed_id = 'quicklink-seed-6'
+union all
+select c1.id, c2.id
+from public.climbers c1
+join public.climbers c2 on c2.seed_id in ('quicklink-seed-5', 'quicklink-seed-9') and c1.seed_id = 'quicklink-seed-7'
+union all
+select c1.id, c2.id
+from public.climbers c1
+join public.climbers c2 on c2.seed_id in ('quicklink-seed-6', 'quicklink-seed-10') and c1.seed_id = 'quicklink-seed-8'
+union all
+select c1.id, c2.id
+from public.climbers c1
+join public.climbers c2 on c2.seed_id in ('quicklink-seed-7') and c1.seed_id = 'quicklink-seed-9'
+union all
+select c1.id, c2.id
+from public.climbers c1
+join public.climbers c2 on c2.seed_id in ('quicklink-seed-8', 'quicklink-seed-9') and c1.seed_id = 'quicklink-seed-10'
+on conflict (swiper_id, liked_id) do nothing;

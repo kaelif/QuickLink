@@ -7,7 +7,7 @@ All scripts are **idempotent**: safe to run multiple times. They only create tab
 ## Order
 
 1. **01_schema.sql** – Creates tables (if not exists), RLS policies, triggers, and optional `seed_id` column on `climbers` for idempotent seeding.
-2. **02_seed_climbers.sql** – Inserts or updates the dummy climbers (same data as `data/dummyClimbers.ts`). Uses `ON CONFLICT (seed_id) DO UPDATE` so re-running updates existing rows instead of duplicating.
+2. **02_seed_climbers.sql** – Inserts the main user (seed_id = `main-user`), other climbers, and `user_likes`. Uses `ON CONFLICT` so re-running does not duplicate. Half of climbers (seed-1..5) have liked the main user for testing mutual matches.
 
 ## How to run
 
@@ -20,7 +20,8 @@ All scripts are **idempotent**: safe to run multiple times. They only create tab
 
 | Table          | Purpose |
 |----------------|---------|
-| `public.climbers`      | Discovery feed: climber profiles (first name, age, location, climbing types, bio, photo URLs). Used for the swipe stack. |
+| `public.climbers`      | All climbers including the main user. Main user has `seed_id = 'main-user'` (the app user on your phone). Others are discovery feed. |
+| `public.user_likes`     | Right swipes: `(swiper_id, liked_id)` = swiper has swiped right on liked. A **match** exists only when both (A,B) and (B,A) exist (mutual like). |
 | `public.user_profiles` | App user’s editable profile (bio, photos, gender, climbing types, age/gender preferences). Optional; can be wired to Supabase Auth later. |
 
 ## Connecting the app
@@ -45,7 +46,10 @@ To load climbers from this database instead of dummy data:
 
 ## Using from the app
 
-- **Climbers**: Query `public.climbers` (e.g. with Supabase client `from('climbers').select('*')`). Map DB columns to your app: `first_name` → `firstName`, `photo_urls` → `photoUrls`, `climbing_types` → `climbingTypes`, and `latitude`/`longitude` into a `location` object. The optional `seed_id` column is used only by the seed script for idempotent upserts; you can omit it from app queries or use `id` (uuid) as the primary key.
+- **Main user**: Identify the app user by querying `climbers` where `seed_id = 'main-user'` (or store that `id` in env, e.g. `EXPO_PUBLIC_MAIN_USER_ID`). Exclude the main user from the discovery stack.
+- **Climbers**: Query `public.climbers` where `seed_id != 'main-user'` (or `id != main_user_id`). Map DB columns: `first_name` → `firstName`, `photo_urls` → `photoUrls`, `climbing_types` → `climbingTypes`, `latitude`/`longitude` → `location`.
+- **Swipe right**: Insert into `user_likes (swiper_id, liked_id)` with `(main_user_id, liked_climber_id)`. Then check if `(liked_climber_id, main_user_id)` exists in `user_likes`; if yes, it’s a match (mutual like).
+- **Matches**: Select climbers `c` where both `(main_user_id, c.id)` and `(c.id, main_user_id)` exist in `user_likes`.
 - **User profile**: To sync the edit-profile screen with Supabase, read/write `public.user_profiles` (e.g. by a user id once Auth is enabled).
 
 ## Auth (optional)

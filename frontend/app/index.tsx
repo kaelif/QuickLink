@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   StyleSheet,
   Text,
@@ -17,6 +18,7 @@ import { useMatches } from "../context/MatchesContext";
 import { DUMMY_CLIMBERS } from "../data/dummyClimbers";
 import { fetchClimbersFromDb } from "../lib/climbersApi";
 import { TESTING, USE_DUMMY_DATA } from "../lib/featureFlags";
+import { isSupabaseConfigured } from "../lib/supabase";
 import { getDistanceKm } from "../lib/geo";
 import { getCurrentLocation, type UserCoords } from "../lib/location";
 import { BACKGROUND_COLOR } from "../lib/theme";
@@ -44,8 +46,9 @@ export default function Index() {
   const [locationLoading, setLocationLoading] = useState(true);
   const [climbersFromDb, setClimbersFromDb] = useState<ClimberProfile[]>([]);
   const [climbersLoading, setClimbersLoading] = useState(!USE_DUMMY_DATA);
+  const [stackKey, setStackKey] = useState(0);
   const { filter } = useFilter();
-  const { matches, removedMatchIds, blockedUserIds, addMatch } = useMatches();
+  const { matches, removedMatchIds, blockedUserIds, addMatch, resetAllSwipesAndMatches } = useMatches();
   const isDark = colorScheme === "dark";
   const loadingTextColor = isDark ? "#ffffff" : "#000000";
   const loadingBgColor = BACKGROUND_COLOR;
@@ -120,6 +123,50 @@ export default function Index() {
 
   const router = useRouter();
 
+  // When using DB and we have no climbers after loading, show a clear empty state.
+  const dbModeNoData =
+    !USE_DUMMY_DATA && !climbersLoading && climbersFromDb.length === 0;
+
+  const handleResetSwipes = () => {
+    Alert.alert(
+      "Reset all swipes & matches",
+      "Clear all matches, messages, and swipe history? Every climber will appear in the stack again.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Reset",
+          style: "destructive",
+          onPress: () => {
+            resetAllSwipesAndMatches();
+            setStackKey((k) => k + 1);
+          },
+        },
+      ]
+    );
+  };
+
+  if (dbModeNoData) {
+    const configured = isSupabaseConfigured();
+    const message = configured
+      ? "No climbers in the database. Run supabase/01_schema.sql and 02_seed_climbers.sql in your Supabase project’s SQL Editor."
+      : "Supabase not configured. Add EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY to a .env file (see .env.example).";
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: loadingBgColor }]} edges={["top"]}>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <Text style={styles.title}>QuickLink</Text>
+            <Text style={styles.subtitle}>Find climbing partners</Text>
+          </View>
+        </View>
+        <View style={[styles.loading, { flex: 1 }]}>
+          <Text style={[styles.loadingText, { color: loadingTextColor, textAlign: "center", paddingHorizontal: 24 }]}>
+            {message}
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
@@ -149,9 +196,18 @@ export default function Index() {
           >
             <MaterialCommunityIcons name="pencil" size={22} color="#1a5f7a" />
           </Pressable>
+          {TESTING && (
+            <Pressable
+              onPress={handleResetSwipes}
+              style={({ pressed }) => [styles.headerBtn, styles.headerIconBtn, pressed && styles.headerBtnPressed]}
+              accessibilityLabel="Reset app (testing): remove all matches and messages"
+            >
+              <MaterialCommunityIcons name="refresh" size={22} color="#1a5f7a" />
+            </Pressable>
+          )}
         </View>
       </View>
-      <SwipeStack climbers={stackClimbers} userLocation={userLocation} onLike={addMatch} />
+      <SwipeStack key={stackKey} climbers={stackClimbers} userLocation={userLocation} onLike={addMatch} />
     </SafeAreaView>
   );
 }

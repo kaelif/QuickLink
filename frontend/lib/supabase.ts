@@ -1,7 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
+import Constants from "expo-constants";
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
+// Prefer values from app.config.js extra (loaded via dotenv); fallback to process.env
+const extra = Constants.expoConfig?.extra ?? {};
+const supabaseUrl = extra.EXPO_PUBLIC_SUPABASE_URL ?? process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
+const supabaseAnonKey = extra.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
 /**
  * Supabase client for the app.

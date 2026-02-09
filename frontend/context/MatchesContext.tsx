@@ -25,6 +25,8 @@ interface MatchesContextValue {
   addMatch: (climber: ClimberProfile) => void;
   removeMatch: (matchId: string) => void;
   blockUser: (matchId: string) => void;
+  /** Clears all matches, messages, removed IDs, and blocked IDs so every climber appears in the stack again. */
+  resetAllSwipesAndMatches: () => void;
   getMessages: (matchId: string) => Message[];
   sendMessage: (matchId: string, text: string) => void;
   isLoading: boolean;
@@ -150,6 +152,19 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const resetAllSwipesAndMatches = useCallback(() => {
+    setMatches([]);
+    setMessages({});
+    setRemovedMatchIds([]);
+    setBlockedUserIds([]);
+    Promise.all([
+      AsyncStorage.removeItem(MATCHES_KEY),
+      AsyncStorage.removeItem(MESSAGES_KEY),
+      AsyncStorage.removeItem(REMOVED_MATCH_IDS_KEY),
+      AsyncStorage.removeItem(BLOCKED_USER_IDS_KEY),
+    ]).catch(() => {});
+  }, []);
+
   const getMessages = useCallback(
     (matchId: string) => {
       if (!matches.some((m) => m.id === matchId)) return [];
@@ -180,7 +195,7 @@ export function MatchesProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MatchesContext.Provider
-      value={{ matches, removedMatchIds, blockedUserIds, addMatch, removeMatch, blockUser, getMessages, sendMessage, isLoading }}
+      value={{ matches, removedMatchIds, blockedUserIds, addMatch, removeMatch, blockUser, resetAllSwipesAndMatches, getMessages, sendMessage, isLoading }}
     >
       {children}
     </MatchesContext.Provider>

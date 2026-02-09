@@ -95,4 +95,16 @@ export const DUMMY_CLIMBERS: ClimberProfile[] = [
       `${W}/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/600px-Nathaniel_Coleman_%28USA%29_2019.jpg`,
     ],
   },
+  {
+    id: "7",
+    firstName: "AnusTart",
+    age: 28,
+    gender: "man",
+    location: { latitude: 40.01499, longitude: -105.27055 },
+    climbingTypes: ["bouldering"],
+    bio: "Bouldering. Love sessioning projects and exploring new boulder fields. V15–V17 range. Down for long days or quick evening sessions.",
+    photoUrls: [
+      `${W}/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/600px-Nathaniel_Coleman_%28USA%29_2019.jpg`,
+    ],
+  },
 ];

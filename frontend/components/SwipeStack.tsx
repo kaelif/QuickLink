@@ -1,7 +1,7 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Platform,
   Pressable,
@@ -40,6 +40,11 @@ export function SwipeStack({ climbers: initialClimbers, userLocation, onLike }: 
   const [climbers, setClimbers] = useState(initialClimbers);
   const [selectedClimber, setSelectedClimber] = useState<ClimberProfile | null>(null);
   const { width: screenWidth } = useWindowDimensions();
+
+  // When the parent passes new climbers (e.g. after reset), sync the stack so cards reappear.
+  useEffect(() => {
+    setClimbers(initialClimbers);
+  }, [initialClimbers]);
   const insets = useSafeAreaInsets();
   const bottomInset = Platform.OS === "android" ? insets.bottom : 0;
   const translateX = useSharedValue(0);

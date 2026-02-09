@@ -1,7 +1,8 @@
 -- QuickLink seed: dummy climbers (idempotent)
 -- Run after 01_schema.sql in Supabase Dashboard → SQL Editor.
 -- Safe to run multiple times: only inserts new rows; existing rows (by seed_id) are updated, not duplicated.
--- Every photo is of the actual famous climber named. Matches frontend/data/dummyClimbers.ts.
+-- Every photo is of the actual famous climber named where Commons images exist.
+-- Brooke Raboutou and Natalia Grossman use No-Image-Placeholder until CC-licensed Commons photos are found; replace photo_urls when available.
 
 set search_path to public;
 
@@ -125,6 +126,49 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/600px-Tomoa_Narasaki_JPN_1868.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/960px-Tomoa_Narasaki_JPN_1868.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tomoa_Narasaki_%28cropped%29.jpg/600px-Tomoa_Narasaki_%28cropped%29.jpg'
+  ]
+),
+(
+  'quicklink-seed-8',
+  'Brooke',
+  24,
+  40.01499,
+  -105.27055,
+  array['sport', 'bouldering'],
+  'Sport and bouldering. Competition and outdoor—love hard projects and long days. Olympic silver (Paris 2024). First woman to climb 5.15c. Looking for partners to try hard with.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/400px-No-Image-Placeholder.svg.png',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/600px-No-Image-Placeholder.svg.png',
+    'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'
+  ]
+),
+(
+  'quicklink-seed-9',
+  'Natalia',
+  23,
+  40.7608,
+  -111.8910,
+  array['sport', 'bouldering'],
+  'Bouldering and lead. Four-time boulder World Cup season champion. Pan Am combined champion. Love sessioning projects and competing. Based in Salt Lake City.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/400px-No-Image-Placeholder.svg.png',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/600px-No-Image-Placeholder.svg.png',
+    'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'
+  ]
+),
+(
+  'quicklink-seed-10',
+  'Ashima',
+  23,
+  40.7128,
+  -74.0060,
+  array['sport', 'bouldering'],
+  'Bouldering and sport. First woman to climb V15 (Horizon). Youth world champ, national champ. Love hard boulders and creative problems. NYC-based.',
+  array[
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg/400px-Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg/600px-Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg/960px-Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/e/e8/Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg'
   ]
 )
 on conflict (seed_id) do update set

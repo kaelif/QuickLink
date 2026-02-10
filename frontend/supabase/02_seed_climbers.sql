@@ -16,7 +16,9 @@ insert into public.climbers (
   longitude,
   climbing_types,
   bio,
-  photo_urls
+  photo_urls,
+  gender,
+  gender_other_text
 ) values (
   'main-user',
   'Main User',
@@ -28,7 +30,9 @@ insert into public.climbers (
   array[
     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/400px-No-Image-Placeholder.svg.png',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/600px-No-Image-Placeholder.svg.png'
-  ]
+  ],
+  'woman',
+  ''
 )
 on conflict (seed_id) do update set
   first_name = excluded.first_name,
@@ -38,9 +42,11 @@ on conflict (seed_id) do update set
   climbing_types = excluded.climbing_types,
   bio = excluded.bio,
   photo_urls = excluded.photo_urls,
+  gender = excluded.gender,
+  gender_other_text = excluded.gender_other_text,
   updated_at = now();
 
--- 2) Other climbers (discovery feed).
+-- 2) Other climbers (discovery feed). Include editable fields: gender, gender_other_text.
 insert into public.climbers (
   seed_id,
   first_name,
@@ -49,7 +55,9 @@ insert into public.climbers (
   longitude,
   climbing_types,
   bio,
-  photo_urls
+  photo_urls,
+  gender,
+  gender_other_text
 ) values
 (
   'quicklink-seed-1',
@@ -65,7 +73,9 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/800px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG/960px-Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG',
     'https://upload.wikimedia.org/wikipedia/commons/2/2f/Action_Directe_11_%289a%29%2C_Foto_Jorgos_Megos.JPG'
-  ]
+  ],
+  'man',
+  ''
 ),
 (
   'quicklink-seed-2',
@@ -81,7 +91,9 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/a/ab/Adam_Ondra_climbing_Silence_9c_by_PAVEL_BLAZEK_2.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/3/3f/Adam_Ondra_climbing_Silence_9c_by_PAVEL_BLAZEK_3.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Adam_Ondra_Climbing_WCh_2018.jpg/600px-Adam_Ondra_Climbing_WCh_2018.jpg'
-  ]
+  ],
+  'man',
+  ''
 ),
 (
   'quicklink-seed-3',
@@ -97,7 +109,9 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/600px-Janja_Garnbret_SLO_2017-08-19_2267.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg/600px-Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/960px-Janja_Garnbret_SLO_2017-08-19_2267.jpg'
-  ]
+  ],
+  'woman',
+  ''
 ),
 (
   'quicklink-seed-4',
@@ -113,7 +127,9 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/4/47/2015-04-02_Chris_Sharma.JPG',
     'https://upload.wikimedia.org/wikipedia/commons/9/98/Chris_sharma.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/e/e8/Chris_sharma_%26_skimble.jpg'
-  ]
+  ],
+  'man',
+  ''
 ),
 (
   'quicklink-seed-5',
@@ -129,7 +145,9 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Alex_Honnold_El_Capitan_Free_Solo_1.png/960px-Alex_Honnold_El_Capitan_Free_Solo_1.png',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Alex_Honnold_-_Trento_Film_Festival_2014.JPG/600px-Alex_Honnold_-_Trento_Film_Festival_2014.JPG',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Alex_Honnold_-_Trento_Film_Festival_2014.JPG/960px-Alex_Honnold_-_Trento_Film_Festival_2014.JPG'
-  ]
+  ],
+  'man',
+  ''
 ),
 (
   'quicklink-seed-6',
@@ -145,7 +163,9 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/600px-Nathaniel_Coleman_%28USA%29_2019.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/800px-Nathaniel_Coleman_%28USA%29_2019.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nathaniel_Coleman_%28USA%29_2019.jpg/960px-Nathaniel_Coleman_%28USA%29_2019.jpg'
-  ]
+  ],
+  'man',
+  ''
 ),
 (
   'quicklink-seed-7',
@@ -161,7 +181,9 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/600px-Tomoa_Narasaki_JPN_1868.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Tomoa_Narasaki_JPN_1868.jpg/960px-Tomoa_Narasaki_JPN_1868.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tomoa_Narasaki_%28cropped%29.jpg/600px-Tomoa_Narasaki_%28cropped%29.jpg'
-  ]
+  ],
+  'man',
+  ''
 ),
 (
   'quicklink-seed-8',
@@ -172,10 +194,14 @@ insert into public.climbers (
   array['sport', 'bouldering'],
   'Sport and bouldering. Competition and outdoor—love hard projects and long days. Olympic silver (Paris 2024). First woman to climb 5.15c. Looking for partners to try hard with.',
   array[
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/400px-No-Image-Placeholder.svg.png',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/600px-No-Image-Placeholder.svg.png',
-    'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'
-  ]
+    'https://upload.wikimedia.org/wikipedia/commons/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/600px-Janja_Garnbret_SLO_2017-08-19_2267.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg/600px-Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/960px-Janja_Garnbret_SLO_2017-08-19_2267.jpg'
+  ],
+  'woman',
+  ''
 ),
 (
   'quicklink-seed-9',
@@ -186,10 +212,14 @@ insert into public.climbers (
   array['sport', 'bouldering'],
   'Bouldering and lead. Four-time boulder World Cup season champion. Pan Am combined champion. Love sessioning projects and competing. Based in Salt Lake City.',
   array[
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/400px-No-Image-Placeholder.svg.png',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/600px-No-Image-Placeholder.svg.png',
-    'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'
-  ]
+    'https://upload.wikimedia.org/wikipedia/commons/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/600px-Janja_Garnbret_SLO_2017-08-19_2267.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg/600px-Climbing_World_Championships_2018_Boulder_Final_Garnbret_%28BT0A8080%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Janja_Garnbret_SLO_2017-08-19_2267.jpg/960px-Janja_Garnbret_SLO_2017-08-19_2267.jpg'
+  ],
+  'woman',
+  ''
 ),
 (
   'quicklink-seed-10',
@@ -204,7 +234,9 @@ insert into public.climbers (
     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg/600px-Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg/960px-Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/e/e8/Climbing_World_Championships_2018_Lead_Final_Woman_finalists_01-Ashima_Shiraishi.jpg'
-  ]
+  ],
+  'woman',
+  ''
 )
 on conflict (seed_id) do update set
   first_name = excluded.first_name,
@@ -214,6 +246,8 @@ on conflict (seed_id) do update set
   climbing_types = excluded.climbing_types,
   bio = excluded.bio,
   photo_urls = excluded.photo_urls,
+  gender = excluded.gender,
+  gender_other_text = excluded.gender_other_text,
   updated_at = now();
 
 -- 3) user_likes: who has swiped right on whom. Half of climbers (seed-1..5) have liked the main user for testing.

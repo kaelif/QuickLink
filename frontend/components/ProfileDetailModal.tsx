@@ -1,9 +1,9 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Image } from "expo-image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dimensions,
+  Image,
   Modal,
   Pressable,
   ScrollView,
@@ -36,9 +36,18 @@ export function ProfileDetailModal({
   onClose,
 }: ProfileDetailModalProps) {
   const [failedPhotoIndices, setFailedPhotoIndices] = useState<Set<number>>(new Set());
+  const [loadedPhotoIndices, setLoadedPhotoIndices] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    setFailedPhotoIndices(new Set());
+    setLoadedPhotoIndices(new Set());
+  }, [climber.id]);
 
   const handlePhotoError = (index: number) => {
     setFailedPhotoIndices((prev) => new Set(prev).add(index));
+  };
+  const handlePhotoLoad = (index: number) => {
+    setLoadedPhotoIndices((prev) => new Set(prev).add(index));
   };
 
   return (
@@ -83,13 +92,23 @@ export function ProfileDetailModal({
                   <MaterialCommunityIcons name="image-off-outline" size={48} color="#999" />
                 </View>
               ) : (
-                <Image
+                <View
                   key={i}
-                  source={{ uri }}
-                  style={[styles.photo, { width: IMAGE_SIZE }, i < climber.photoUrls.length - 1 && styles.photoGap]}
-                  contentFit="cover"
-                  onError={() => handlePhotoError(i)}
-                />
+                  style={[
+                    styles.photo,
+                    { width: IMAGE_SIZE, overflow: "hidden" },
+                    i < climber.photoUrls.length - 1 && styles.photoGap,
+                  ]}
+                >
+                  <View style={[StyleSheet.absoluteFill, styles.photoPlaceholder]} />
+                  <Image
+                    source={{ uri }}
+                    style={[StyleSheet.absoluteFill, { opacity: loadedPhotoIndices.has(i) ? 1 : 0 }]}
+                    resizeMode="cover"
+                    onLoad={() => handlePhotoLoad(i)}
+                    onError={() => handlePhotoError(i)}
+                  />
+                </View>
               )
             )}
           </ScrollView>

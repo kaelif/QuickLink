@@ -1,6 +1,7 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -12,6 +13,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserProfile } from "../context/UserProfileContext";
+import { updateMainUserProfile } from "../lib/climbersApi";
+import { USE_DUMMY_DATA } from "../lib/featureFlags";
+import { isSupabaseConfigured } from "../lib/supabase";
 import { BACKGROUND_COLOR } from "../lib/theme";
 import type { ClimbingType } from "../types/climber";
 import type { Gender, UserProfile } from "../types/userProfile";
@@ -79,7 +83,7 @@ export default function EditProfileScreen() {
     }, [isLoading, profile])
   );
 
-  const save = useCallback(() => {
+  const save = useCallback(async () => {
     const next: UserProfile = {
       bio,
       photoUrls,
@@ -88,6 +92,13 @@ export default function EditProfileScreen() {
       climbingTypes,
     };
     setProfile(next);
+    if (!USE_DUMMY_DATA && isSupabaseConfigured()) {
+      const { error } = await updateMainUserProfile(next);
+      if (error) {
+        Alert.alert("Could not save to database", error);
+        return;
+      }
+    }
     router.back();
   }, [bio, photoUrls, gender, genderOtherText, climbingTypes, setProfile, router]);
 

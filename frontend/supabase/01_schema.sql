@@ -29,6 +29,14 @@ alter table public.climbers
 
 comment on column public.climbers.seed_id is 'Set by seed script; used for ON CONFLICT so seed can be run repeatedly without duplicates.';
 
+-- Editable profile fields: gender and gender_other_text (used by edit-profile and for filtering). Nullable for backfill.
+alter table public.climbers
+  add column if not exists gender text check (gender is null or gender in ('woman', 'man', 'nonbinary', 'other'));
+alter table public.climbers
+  add column if not exists gender_other_text text not null default '';
+comment on column public.climbers.gender is 'Editable: woman, man, nonbinary, other.';
+comment on column public.climbers.gender_other_text is 'Editable: free text when gender is other.';
+
 -- RLS: drop and recreate so script is idempotent.
 alter table public.climbers enable row level security;
 
@@ -36,6 +44,10 @@ drop policy if exists "Climbers are viewable by everyone" on public.climbers;
 create policy "Climbers are viewable by everyone"
   on public.climbers for select
   using (true);
+drop policy if exists "Climbers are updatable by everyone" on public.climbers;
+create policy "Climbers are updatable by everyone"
+  on public.climbers for update
+  using (true) with check (true);
 
 -- User likes (swipe right): who each climber has swiped right on. A match = mutual like (A liked B and B liked A).
 create table if not exists public.user_likes (

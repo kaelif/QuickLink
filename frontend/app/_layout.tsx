@@ -13,7 +13,14 @@ export default function RootLayout() {
         <UserProfileProvider>
           <FilterProvider>
             <MatchesProvider>
-              <Stack screenOptions={{ headerShown: false }} />
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen
+                  name="chat/[id]"
+                  options={{
+                    animation: "slide_from_left",
+                  }}
+                />
+              </Stack>
             </MatchesProvider>
           </FilterProvider>
         </UserProfileProvider>

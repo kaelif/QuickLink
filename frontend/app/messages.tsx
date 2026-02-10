@@ -1,9 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Image } from "expo-image";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   Alert,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -27,6 +27,8 @@ function MatchRow({
   onPress: () => void;
   onRemove: () => void;
 }) {
+  const [avatarError, setAvatarError] = useState(false);
+  const avatarUrl = match.photoUrls[0];
   const renderRightActions = useCallback(
     () => (
       <Pressable
@@ -51,11 +53,18 @@ function MatchRow({
         style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
       >
         <View style={styles.avatarWrap}>
-          <Image
-            source={{ uri: match.photoUrls[0] }}
-            style={styles.avatar}
-            contentFit="cover"
-          />
+          {avatarError || !avatarUrl ? (
+            <View style={[styles.avatar, styles.avatarPlaceholder]}>
+              <MaterialCommunityIcons name="image-off-outline" size={24} color="#999" />
+            </View>
+          ) : (
+            <Image
+              source={{ uri: avatarUrl }}
+              style={styles.avatar}
+              resizeMode="cover"
+              onError={() => setAvatarError(true)}
+            />
+          )}
         </View>
         <View style={styles.rowContent}>
           <Text style={styles.name}>
@@ -83,17 +92,26 @@ function MatchAvatar({
   match: ClimberProfile;
   onPress: () => void;
 }) {
+  const [avatarError, setAvatarError] = useState(false);
+  const avatarUrl = match.photoUrls[0];
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [styles.avatarChip, pressed && styles.avatarChipPressed]}
     >
       <View style={styles.avatarChipImageWrap}>
-        <Image
-          source={{ uri: match.photoUrls[0] }}
-          style={styles.avatarChipImage}
-          contentFit="cover"
-        />
+        {avatarError || !avatarUrl ? (
+          <View style={[styles.avatarChipImage, styles.avatarPlaceholder]}>
+            <MaterialCommunityIcons name="image-off-outline" size={20} color="#999" />
+          </View>
+        ) : (
+          <Image
+            source={{ uri: avatarUrl }}
+            style={styles.avatarChipImage}
+            resizeMode="cover"
+            onError={() => setAvatarError(true)}
+          />
+        )}
       </View>
       <Text style={styles.avatarChipName} numberOfLines={1}>
         {match.firstName}
@@ -358,6 +376,11 @@ const styles = StyleSheet.create({
   avatar: {
     width: "100%",
     height: "100%",
+  },
+  avatarPlaceholder: {
+    backgroundColor: "#eee",
+    justifyContent: "center",
+    alignItems: "center",
   },
   rowContent: {
     flex: 1,

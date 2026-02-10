@@ -71,7 +71,7 @@ export default function ChatScreen() {
           style: "destructive",
           onPress: () => {
             removeMatch(id);
-            router.replace("/messages");
+            router.back();
           },
         },
       ]
@@ -90,7 +90,7 @@ export default function ChatScreen() {
           style: "destructive",
           onPress: () => {
             blockUser(id);
-            router.replace("/messages");
+            router.back();
           },
         },
       ]

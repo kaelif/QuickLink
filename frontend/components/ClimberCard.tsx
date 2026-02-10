@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import { formatDistance } from "../lib/geo";
 import { BACKGROUND_COLOR, backgroundRgba } from "../lib/theme";
@@ -18,10 +18,15 @@ interface ClimberCardProps {
 }
 
 export function ClimberCard({ climber, distanceKm }: ClimberCardProps) {
+  const photoUrl = climber.photoUrls[0];
   const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  useEffect(() => {
+    setImageLoaded(false);
+    setImageError(false);
+  }, [photoUrl]);
   const bioSnippet =
     climber.bio.length > 120 ? climber.bio.slice(0, 120) + "…" : climber.bio;
-  const photoUrl = climber.photoUrls[0];
 
   return (
     <View style={styles.card}>
@@ -31,12 +36,16 @@ export function ClimberCard({ climber, distanceKm }: ClimberCardProps) {
             <MaterialCommunityIcons name="image-off-outline" size={48} color="#999" />
           </View>
         ) : (
-          <Image
-            source={{ uri: photoUrl }}
-            style={styles.image}
-            resizeMode="cover"
-            onError={() => setImageError(true)}
-          />
+          <>
+            <View style={styles.imagePlaceholder} />
+            <Image
+              source={{ uri: photoUrl }}
+              style={[styles.image, { opacity: imageLoaded ? 1 : 0 }]}
+              resizeMode="cover"
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageError(true)}
+            />
+          </>
         )}
       </View>
       <View style={styles.footer}>
